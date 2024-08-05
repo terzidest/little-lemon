@@ -41,17 +41,26 @@ A React Native app for the Little Lemon Restaurant that allows users to browse t
 2. Browse the menu, search for items, and filter by categories.
 
 ## Screenshots
+
 ### Onboarding Screen
-<img src="assets/screenshots/onboarding-screen.png" alt="Onboarding Screen" width="400" style="border:1px solid black">
+<table><tr><td>
+<img src="assets/screenshots/onboarding-screen.png" alt="Onboarding Screen" width="400" style="border:1px solid black;"/>
+</td></tr></table>
 
 ### Home Screen
-<img src="assets/screenshots/home-screen.png" alt="Home Screen" width="400" style="border:1px solid black;">
+<table><tr><td>
+<img src="assets/screenshots/home-screen.png" alt="Home Screen" width="400" style="border:1px solid black;"/>
+</td></tr></table>
 
 ### Filter and Search
-<img src="assets/screenshots/search-filter.png" alt="Search Filter" width="400" style="border:1px solid black;">
+<table><tr><td>
+<img src="assets/screenshots/search-filter.png" alt="Search Filter" width="400" style="border:1px solid black;"/>
+</td></tr></table>
 
 ### Profile Screen
-<img src="assets/screenshots/profile-screen.png" alt="Profile Screen" width="400" style="border:1px solid black;">
+<table><tr><td>
+<img src="assets/screenshots/profile-screen.png" alt="Profile Screen" width="400" style="border:1px solid black;"/>
+</td></tr></table>
 
 ## Architecture
 
