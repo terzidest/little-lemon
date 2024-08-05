@@ -42,7 +42,7 @@ A React Native app for the Little Lemon Restaurant that allows users to browse t
 
 ## Screenshots
 ### Onboarding Screen
-<img src="assets/screenshots/onboarding-screen.png)" alt="Onboarding Screen" width="400" style="border:1px solid black;">
+<img src="assets/screenshots/onboarding-screen.png" alt="Onboarding Screen" width="400" style="border:1px solid black">
 
 ### Home Screen
 <img src="assets/screenshots/home-screen.png" alt="Home Screen" width="400" style="border:1px solid black;">
