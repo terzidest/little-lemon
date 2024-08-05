@@ -42,16 +42,16 @@ A React Native app for the Little Lemon Restaurant that allows users to browse t
 
 ## Screenshots
 ### Onboarding Screen
-![Onboarding Screen](assets/screenshots/onboarding-screen.png)
+<img src="assets/screenshots/onboarding-screen.png)" alt="Onboarding Screen" width="400">
 
 ### Home Screen
-![Home Screen](assets/screenshots/home-screen.png)
+<img src="assets/screenshots/home-screen.png" alt="Home Screen" width="400">
 
 ### Filter and Search
-![Filter and Search](assets/screenshots/search-filter.png)
+<img src="assets/screenshots/search-filter.png" alt="Search Filter" width="400">
 
 ### Profile Screen
-![Profile Screen](assets/screenshots/profile-screen.png)
+<img src="assets/screenshots/profile-screen.png" alt="Profile Screen" width="400">
 
 ## Architecture
 
