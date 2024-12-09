@@ -43,24 +43,16 @@ A React Native app for the Little Lemon Restaurant that allows users to browse t
 ## Screenshots
 
 ### Onboarding Screen
-<table><tr><td>
-<img src="assets/screenshots/onboarding-screen.png" alt="Onboarding Screen" width="400" style="border:1px solid black;"/>
-</td></tr></table>
+<img src="assets/screenshots/onboarding-screen.png)" alt="Onboarding Screen" width="400">
 
 ### Home Screen
-<table><tr><td>
-<img src="assets/screenshots/home-screen.png" alt="Home Screen" width="400" style="border:1px solid black;"/>
-</td></tr></table>
+<img src="assets/screenshots/home-screen.png" alt="Home Screen" width="400">
 
 ### Filter and Search
-<table><tr><td>
-<img src="assets/screenshots/search-filter.png" alt="Search Filter" width="400" style="border:1px solid black;"/>
-</td></tr></table>
+<img src="assets/screenshots/search-filter.png" alt="Search Filter" width="400">
 
 ### Profile Screen
-<table><tr><td>
-<img src="assets/screenshots/profile-screen.png" alt="Profile Screen" width="400" style="border:1px solid black;"/>
-</td></tr></table>
+<img src="assets/screenshots/profile-screen.png" alt="Profile Screen" width="400">
 
 ## Architecture
 
@@ -81,7 +73,6 @@ A React Native app for the Little Lemon Restaurant that allows users to browse t
 - Browse menu items with images and descriptions.
 - Search for items by name.
 - Filter items by categories (Starters, Mains, Desserts, Drinks, Specials).
-- View detailed information about each menu item.
 
 ## Development
 
@@ -94,17 +85,9 @@ SQLite is used to store menu data locally for offline access. The `database.js` 
 ### State Management
 The app uses the Context API to manage global state, such as selected categories and search terms.
 
-## Contributing
-1. Fork the repository.
-2. Create a new branch (`git checkout -b feature-branch`).
-3. Commit your changes (`git commit -am 'Add new feature'`).
-4. Push to the branch (`git push origin feature-branch`).
-5. Create a new Pull Request.
-
 ## Credits
 - [Expo](https://expo.dev/)
 - [React Native](https://reactnative.dev/)
 - [SQLite](https://www.sqlite.org/index.html)
 
-## License
-This project is licensed under the MIT License.
+
