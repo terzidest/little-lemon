@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import AsyncStorage from '@react-native-async-storage/async-storage';
@@ -48,18 +48,18 @@ export default function App() {
 
   return (
     <AppProvider>
-    <NavigationContainer>
-      <Stack.Navigator initialRouteName={isOnboardingCompleted ? 'Home' : 'Onboarding'}>
-        <Stack.Screen
-          name="Onboarding"
-          options={{ headerShown: false }}  // Hide the header for Onboarding
-        >
-          {props => <Onboarding {...props} onComplete={handleOnboardingComplete} />}
-        </Stack.Screen>
-        <Stack.Screen name="Home" options={{ headerShown: false }} component={HomeScreen} />
-        <Stack.Screen name="Profile" options={{ headerShown: false }} component={ProfileScreen} />
-      </Stack.Navigator>
-    </NavigationContainer>
+      <NavigationContainer>
+        <Stack.Navigator initialRouteName={isOnboardingCompleted ? 'Home' : 'Onboarding'}>
+          <Stack.Screen
+            name="Onboarding"
+            options={{ headerShown: false }}  // Hide the header for Onboarding
+          >
+            {props => <Onboarding {...props} onComplete={handleOnboardingComplete} />}
+          </Stack.Screen>
+          <Stack.Screen name="Home" options={{ headerShown: false }} component={HomeScreen} />
+          <Stack.Screen name="Profile" options={{ headerShown: false }} component={ProfileScreen} />
+        </Stack.Navigator>
+      </NavigationContainer>
     </AppProvider>
   );
 }
