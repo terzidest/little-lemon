@@ -20,13 +20,13 @@ const getFirebaseConfig = () => {
   } catch (e) {
     // If local config doesn't exist, use environment variables or Expo Constants
     firebaseConfig = {
-      apiKey: process.env.FIREBASE_API_KEY || (Constants.expoConfig && Constants.expoConfig.extra && Constants.expoConfig.extra.firebaseApiKey) || "***REMOVED***",
-      authDomain: process.env.FIREBASE_AUTH_DOMAIN || (Constants.expoConfig && Constants.expoConfig.extra && Constants.expoConfig.extra.firebaseAuthDomain) || "little-lemon-9bea8.firebaseapp.com",
-      projectId: process.env.FIREBASE_PROJECT_ID || (Constants.expoConfig && Constants.expoConfig.extra && Constants.expoConfig.extra.firebaseProjectId) || "little-lemon-9bea8",
-      storageBucket: process.env.FIREBASE_STORAGE_BUCKET || (Constants.expoConfig && Constants.expoConfig.extra && Constants.expoConfig.extra.firebaseStorageBucket) || "little-lemon-9bea8.firebasestorage.app",
-      messagingSenderId: process.env.FIREBASE_MESSAGING_SENDER_ID || (Constants.expoConfig && Constants.expoConfig.extra && Constants.expoConfig.extra.firebaseMessagingSenderId) || "680386298336",
-      appId: process.env.FIREBASE_APP_ID || (Constants.expoConfig && Constants.expoConfig.extra && Constants.expoConfig.extra.firebaseAppId) || "1:680386298336:web:7d1c8fae3c2cdda351ab85",
-      measurementId: process.env.FIREBASE_MEASUREMENT_ID || (Constants.expoConfig && Constants.expoConfig.extra && Constants.expoConfig.extra.firebaseMeasurementId) || "G-NZMC9N5B9J"
+      apiKey: process.env.FIREBASE_API_KEY || (Constants.expoConfig && Constants.expoConfig.extra && Constants.expoConfig.extra.firebaseApiKey), 
+      authDomain: process.env.FIREBASE_AUTH_DOMAIN || (Constants.expoConfig && Constants.expoConfig.extra && Constants.expoConfig.extra.firebaseAuthDomain),
+      projectId: process.env.FIREBASE_PROJECT_ID || (Constants.expoConfig && Constants.expoConfig.extra && Constants.expoConfig.extra.firebaseProjectId),
+      storageBucket: process.env.FIREBASE_STORAGE_BUCKET || (Constants.expoConfig && Constants.expoConfig.extra && Constants.expoConfig.extra.firebaseStorageBucket),
+      messagingSenderId: process.env.FIREBASE_MESSAGING_SENDER_ID || (Constants.expoConfig && Constants.expoConfig.extra && Constants.expoConfig.extra.firebaseMessagingSenderId),
+      appId: process.env.FIREBASE_APP_ID || (Constants.expoConfig && Constants.expoConfig.extra && Constants.expoConfig.extra.firebaseAppId),
+      measurementId: process.env.FIREBASE_MEASUREMENT_ID || (Constants.expoConfig && Constants.expoConfig.extra && Constants.expoConfig.extra.firebaseMeasurementId)
     };
   }
   
