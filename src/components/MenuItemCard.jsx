@@ -25,7 +25,9 @@ export const MenuItemCard = ({ item }) => {
     setImageLoading(false);
   };
   
-  const handleImageError = () => {
+  const handleImageError = (error) => {
+    console.log('Image failed to load:', imageUrl);
+    console.log('Error:', error.nativeEvent?.error);
     setImageLoading(false);
     setImageError(true);
   };

@@ -53,3 +53,31 @@ export const filterMenuItems = (items, searchTerm) => {
     item.category?.toLowerCase().includes(term)
   );
 };
+
+/**
+ * Gets initials from first and last name
+ * @param {string} firstName - First name
+ * @param {string} lastName - Last name
+ * @returns {string} - Initials (e.g., "JD" for John Doe)
+ */
+export const getInitials = (firstName = '', lastName = '') => {
+  const firstInitial = firstName.charAt(0).toUpperCase() || '';
+  const lastInitial = lastName.charAt(0).toUpperCase() || '';
+  return `${firstInitial}${lastInitial}` || 'U';
+};
+
+/**
+ * Base URL for menu images
+ * Using raw GitHub content URL for proper image loading
+ */
+export const MENU_IMAGE_BASE_URL = 'https://raw.githubusercontent.com/Meta-Mobile-Developer-PC/Working-With-Data-API/main/images/';
+
+/**
+ * Available menu categories
+ */
+export const CATEGORIES = [
+  { id: 'starters', title: 'Starters' },
+  { id: 'mains', title: 'Mains' },
+  { id: 'desserts', title: 'Desserts' },
+  { id: 'beverages', title: 'Beverages' },
+];
