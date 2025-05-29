@@ -12,6 +12,14 @@ module.exports = function (api) {
         ["babel-preset-expo", { jsxImportSource: "nativewind" }],
         "nativewind/babel",
       ],
+      env: {
+        test: {
+          presets: [
+            ["babel-preset-expo", { jsxImportSource: "nativewind" }],
+            "nativewind/babel",
+          ],
+        },
+      },
     };
   }
 };

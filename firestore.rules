@@ -2,18 +2,107 @@ rules_version = '2';
 
 service cloud.firestore {
   match /databases/{database}/documents {
-
-    // This rule allows anyone with your Firestore database reference to view, edit,
-    // and delete all data in your Firestore database. It is useful for getting
-    // started, but it is configured to expire after 30 days because it
-    // leaves your app open to attackers. At that time, all client
-    // requests to your Firestore database will be denied.
-    //
-    // Make sure to write security rules for your app before that time, or else
-    // all client requests to your Firestore database will be denied until you Update
-    // your rules
+    
+    // ========================================
+    // HELPER FUNCTIONS
+    // ========================================
+    
+    // Check if user is authenticated
+    function isSignedIn() {
+      return request.auth != null;
+    }
+    
+    // Check if the request is for the user's own data
+    function isOwner(userId) {
+      return isSignedIn() && request.auth.uid == userId;
+    }
+    
+    // Limit document size to prevent abuse (for demo project)
+    function isValidDataSize() {
+      return request.resource.data.size() < 50;
+    }
+    
+    // Validate user profile data structure
+    function isValidProfile() {
+      return request.resource.data.keys().hasAll(['firstName', 'lastName', 'email']) &&
+             request.resource.data.firstName is string &&
+             request.resource.data.lastName is string &&
+             request.resource.data.email is string &&
+             request.resource.data.firstName.size() <= 50 &&
+             request.resource.data.lastName.size() <= 50;
+    }
+    
+    // Rate limiting helper (prevent spam in demo)
+    // Checks if the last update was at least 5 seconds ago
+    function rateLimitCheck() {
+      return !exists(/databases/$(database)/documents/user_profiles/$(request.auth.uid)) ||
+             resource.data.lastUpdated == null ||
+             request.time > resource.data.lastUpdated + duration.value(5, 's');
+    }
+    
+    // ========================================
+    // SECURITY RULES
+    // ========================================
+    
+    // MENU ITEMS COLLECTION - PUBLIC READ ACCESS
+    // Collection name: menu_items (matches your code)
+    match /menu_items/{menuItem} {
+      allow read: if true;  // Anyone can view menu items
+      allow write: if false; // Admin only through console
+    }
+    
+    // USER PROFILES COLLECTION
+    // Collection name: user_profiles (matches your code)
+    match /user_profiles/{userId} {
+      // Read own profile only
+      allow read: if isOwner(userId);
+      
+      // Create profile with validation
+      allow create: if isOwner(userId) && 
+                      isValidProfile() &&
+                      isValidDataSize();
+      
+      // Update with rate limiting and validation
+      allow update: if isOwner(userId) && 
+                      isValidProfile() &&
+                      isValidDataSize() &&
+                      rateLimitCheck();
+      
+      // No deletion in demo to prevent data loss
+      allow delete: if false;
+    }
+    
+    // NOTIFICATION PREFERENCES COLLECTION
+    // Collection name: notification_preferences (matches your code)
+    match /notification_preferences/{userId} {
+      allow read: if isOwner(userId);
+      
+      // Write with validation
+      allow write: if isOwner(userId) && 
+                     isValidDataSize() &&
+                     request.resource.data.keys().hasAll([
+                       'orderStatuses', 
+                       'passwordChanges', 
+                       'specialOffers', 
+                       'newsletter'
+                     ]);
+    }
+    
+    // DEMO STATISTICS COLLECTION (Optional)
+    // Track demo usage without exposing user data
+    match /demoStats/{stat} {
+      allow read: if false;  // Only accessible via admin
+      allow create: if isSignedIn() && 
+                      request.resource.data.keys().hasOnly(['timestamp', 'action']) &&
+                      request.resource.data.action in ['login', 'register', 'view_menu'];
+      allow update: if false;
+      allow delete: if false;
+    }
+    
+    // CATCH-ALL RULE
+    // Deny access to any other collections
     match /{document=**} {
-      allow read, write: if request.time < timestamp.date(2025, 5, 24);
+      allow read, write: if false;
     }
   }
 }

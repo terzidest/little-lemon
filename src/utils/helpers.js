@@ -1,95 +1,55 @@
-/**
- * Base URL for menu item images
- */
-export const MENU_IMAGE_BASE_URL = 'https://raw.githubusercontent.com/Meta-Mobile-Developer-PC/Working-With-Data-API/main/images/';
+// Simple utility functions for the app
 
 /**
- * Menu categories
- */
-export const CATEGORIES = [
-  { id: 'starters', title: 'Starters' },
-  { id: 'mains', title: 'Mains' },
-  { id: 'desserts', title: 'Desserts' },
-  { id: 'drinks', title: 'Drinks' },
-  { id: 'specials', title: 'Specials' }
-];
-
-/**
- * Get initials from first and last name
- * 
- * @param {string} firstName - First name
- * @param {string} lastName - Last name
- * @returns {string} Initials (2 letters max)
- */
-export const getInitials = (firstName = '', lastName = '') => {
-  const firstInitial = firstName.trim().charAt(0).toUpperCase() || '';
-  const lastInitial = lastName.trim().charAt(0).toUpperCase() || '';
-  
-  return `${firstInitial}${lastInitial}`;
-};
-
-/**
- * Validate email address format
- * 
+ * Validates email format
  * @param {string} email - Email to validate
- * @returns {boolean} Whether email is valid
+ * @returns {boolean} - True if valid email format
  */
 export const validateEmail = (email) => {
-  const re = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-  return re.test(String(email).toLowerCase());
+  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+  return emailRegex.test(email);
 };
 
 /**
- * Validate phone number format
- * 
- * @param {string} phone - Phone number to validate
- * @returns {boolean} Whether phone number is valid
- */
-export const validatePhoneNumber = (phone) => {
-  // Simple check for numbers, spaces, dashes, parentheses
-  const re = /^[0-9\s\-\(\)]+$/;
-  return phone.length >= 10 && re.test(phone);
-};
-
-/**
- * Format price as currency
- * 
+ * Formats price with currency
  * @param {number} price - Price to format
- * @param {string} currency - Currency symbol
- * @returns {string} Formatted price
+ * @param {string} currency - Currency symbol (default: $)
+ * @returns {string} - Formatted price string
  */
 export const formatPrice = (price, currency = '$') => {
-  return `${currency}${parseFloat(price).toFixed(2)}`;
-};
-
-/**
- * Format phone number for display
- * 
- * @param {string} phone - Phone number to format
- * @returns {string} Formatted phone number
- */
-export const formatPhone = (phone) => {
-  if (!phone) return '';
-  
-  // Remove all non-digit characters
-  const cleaned = phone.replace(/\D/g, '');
-  
-  // Format based on length
-  if (cleaned.length === 10) {
-    return `(${cleaned.slice(0, 3)}) ${cleaned.slice(3, 6)}-${cleaned.slice(6, 10)}`;
+  if (typeof price !== 'number' || isNaN(price)) {
+    return `${currency}0.00`;
   }
-  
-  return phone;
+  return `${currency}${price.toFixed(2)}`;
 };
 
 /**
- * Truncate text with ellipsis
- * 
- * @param {string} text - Text to truncate
- * @param {number} maxLength - Maximum length
- * @returns {string} Truncated text
+ * Capitalizes first letter of each word
+ * @param {string} str - String to capitalize
+ * @returns {string} - Capitalized string
  */
-export const truncateText = (text, maxLength = 100) => {
-  if (!text || text.length <= maxLength) return text;
-  return `${text.slice(0, maxLength)}...`;
+export const capitalizeWords = (str) => {
+  if (!str || typeof str !== 'string') return '';
+  return str
+    .toLowerCase()
+    .split(' ')
+    .map(word => word.charAt(0).toUpperCase() + word.slice(1))
+    .join(' ');
+};
+
+/**
+ * Filters menu items by search term
+ * @param {Array} items - Menu items array
+ * @param {string} searchTerm - Search term
+ * @returns {Array} - Filtered items
+ */
+export const filterMenuItems = (items, searchTerm) => {
+  if (!searchTerm || !Array.isArray(items)) return items;
+  
+  const term = searchTerm.toLowerCase();
+  return items.filter(item => 
+    item.name?.toLowerCase().includes(term) ||
+    item.description?.toLowerCase().includes(term) ||
+    item.category?.toLowerCase().includes(term)
+  );
 };

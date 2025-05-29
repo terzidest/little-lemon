@@ -1,198 +1,242 @@
-# Little Lemon Mobile App
+# 🍋 Little Lemon Restaurant App
 
-![Little Lemon Banner](https://raw.githubusercontent.com/Meta-Mobile-Developer-PC/Working-With-Data-API/main/images/little-lemon-banner.png)
-
-A React Native mobile application for the Little Lemon restaurant, featuring a clean, modern UI with menu browsing, user profiles, authentication, and more.
-
-## 📱 Screenshots
-
-<div style="display: flex; flex-direction: row; flex-wrap: wrap; gap: 10px; justify-content: center;">
-  <img src="https://raw.githubusercontent.com/Meta-Mobile-Developer-PC/Working-With-Data-API/main/images/little-lemon-home.png" alt="Home Screen" width="250" style="border-radius: 10px;"/>
-  <img src="https://raw.githubusercontent.com/Meta-Mobile-Developer-PC/Working-With-Data-API/main/images/little-lemon-menu.png" alt="Menu" width="250" style="border-radius: 10px;"/>
-  <img src="https://raw.githubusercontent.com/Meta-Mobile-Developer-PC/Working-With-Data-API/main/images/little-lemon-profile.png" alt="Profile" width="250" style="border-radius: 10px;"/>
+<div align="center">
+  <img src="https://raw.githubusercontent.com/Meta-Mobile-Developer-PC/Working-With-Data-API/main/images/little-lemon-banner.png" alt="Little Lemon Banner" width="600"/>
 </div>
+
+<div align="center">
+
+[![React Native](https://img.shields.io/badge/React%20Native-0.76.9-blue.svg)](https://reactnative.dev/)
+[![Expo](https://img.shields.io/badge/Expo-~52.0-black.svg)](https://expo.dev/)
+[![Firebase](https://img.shields.io/badge/Firebase-10.14.1-orange.svg)](https://firebase.google.com/)
+[![TypeScript](https://img.shields.io/badge/JavaScript-ES6+-yellow.svg)](https://www.javascript.com/)
+[![License](https://img.shields.io/badge/License-MIT-green.svg)](LICENSE)
+
+</div>
+
+> A modern, feature-rich React Native mobile application for a Mediterranean restaurant showcasing contemporary mobile development practices with Firebase integration, state management, and clean architecture.
 
 ## 🌟 Features
 
-- **Authentication**: Email/password authentication with user registration and login
-- **Menu Browsing**: View and filter restaurant menu items by category
-- **Search**: Find menu items by name or description
-- **User Profiles**: Create and manage your profile, including avatar uploads
-- **Notification Preferences**: Manage your email notification settings
-- **Responsive Design**: Beautiful UI that adapts to different device sizes
-- **Offline Support**: Basic functionality works without an internet connection
+### 🔐 Authentication & User Management
+- **Secure Authentication** - Email/password authentication with Firebase Auth
+- **User Profiles** - Complete profile management with avatar upload
+- **Persistent Sessions** - Automatic login persistence with AsyncStorage
+- **Password Recovery** - Built-in password reset functionality
 
-## 🛠️ Technology Stack
+### 🍽️ Menu & Discovery
+- **Dynamic Menu** - Real-time menu browsing with Firebase Firestore
+- **Smart Search** - Instant search by dish name or description
+- **Category Filtering** - Filter menu items by food categories
+- **Rich Media** - High-quality food imagery and detailed descriptions
 
-- **React Native & Expo**: Core framework for cross-platform mobile development
-- **Firebase**: Authentication and Firestore database for backend
-- **Zustand**: Lightweight state management with a slice pattern
-- **NativeWind**: Tailwind CSS for React Native styling
-- **React Navigation**: Screen navigation and routing
-- **Custom Hooks**: Business logic separation with custom React hooks
+### 🔔 Personalization
+- **Notification Preferences** - Granular control over app notifications
+- **Customizable Experience** - Tailored user interface based on preferences
+- **Profile Customization** - Personal information and avatar management
 
-## 📂 Project Architecture
+### 🎨 Modern UI/UX
+- **NativeWind Styling** - Tailwind CSS for React Native with responsive design
+- **Smooth Animations** - Fluid transitions and micro-interactions
+- **Accessible Design** - WCAG compliant interface elements
+- **Dark/Light Ready** - Foundation for theme switching
 
-The app follows a modern, component-based architecture with a clear separation of concerns:
+## 🛠️ Technical Stack
 
-- **Components**: Reusable UI elements
-  - **Forms**: Form-specific components 
-  - **Layout**: Structural components
-  - **UI**: Basic interface elements
-- **Hooks**: Custom React hooks for business logic
-- **Navigation**: Screen routing configuration
-- **Screens**: Full-screen components
-- **Store**: State management with Zustand
-  - **Slices**: Modular state pieces
-- **Utils**: Helper functions and constants
+### Frontend
+- **React Native** `0.76.9` - Cross-platform mobile development
+- **Expo** `~52.0` - Development platform and deployment
+- **React Navigation** `^6.1.18` - Type-safe navigation
+- **NativeWind** `^4.1.23` - Tailwind CSS for React Native
+- **React Native Reanimated** `3.16.2` - Advanced animations
 
-## 🚀 Getting Started
+### Backend & Services
+- **Firebase Auth** `^1.10.0` - Authentication service
+- **Firestore** `^4.7.10` - NoSQL document database
+- **Firebase Storage** - Image and asset storage
+
+### State Management
+- **Zustand** `^4.5.2` - Lightweight state management
+- **Slice Pattern** - Modular state organization
+- **AsyncStorage** - Local data persistence
+
+### Development Tools
+- **Jest** `^29.7.0` - Testing framework
+- **React Testing Library** - Component testing utilities
+- **ESLint & Prettier** - Code quality and formatting
+- **GitHub Actions** - CI/CD pipeline
+
+## 🏗️ Architecture
+
+### Project Structure
+```
+src/
+├── components/          # Reusable UI components
+│   ├── forms/          # Form-specific components
+│   ├── layout/         # Layout and structural components
+│   └── ui/             # Basic UI elements
+├── firebase/           # Firebase configuration and services
+├── hooks/              # Custom React hooks
+├── navigation/         # Navigation configuration
+├── screens/            # Screen components
+├── store/              # Zustand store with slices
+│   └── slices/         # Modular state slices
+└── utils/              # Helper functions and constants
+```
+
+### Design Patterns
+- **Component Composition** - Reusable and composable UI components
+- **Custom Hooks** - Business logic separation from UI components
+- **Slice Pattern** - Modular state management with Zustand
+- **Service Layer** - Firebase operations abstracted into services
+- **Error Boundaries** - Graceful error handling throughout the app
+
+## 🚀 Quick Start
 
 ### Prerequisites
-
-- Node.js (v14 or newer)
-- npm or yarn
-- Expo CLI
-- Firebase account
+- **Node.js** >= 14.0.0
+- **npm** or **yarn**
+- **Expo CLI** installed globally
+- **iOS Simulator** (macOS) or **Android Studio** (for emulators)
 
 ### Installation
 
-1. Clone the repository:
-   ```
+1. **Clone the repository**
+   ```bash
    git clone https://github.com/yourusername/little-lemon.git
    cd little-lemon
    ```
 
-2. Install dependencies:
-   ```
+2. **Install dependencies**
+   ```bash
    npm install
    ```
 
-3. Create a Firebase project:
-   - Go to the [Firebase Console](https://console.firebase.google.com/)
-   - Create a new project
-   - Enable Authentication (Email/Password)
-   - Create a Firestore database
-   - Register a web app in your Firebase project
-
-4. Configure Firebase:
-   - Copy your Firebase configuration from the console
-   - Create a file at `src/firebase/firebase-config-local.js` with your config:
-     ```javascript
-     export default {
-       apiKey: "YOUR_API_KEY",
-       authDomain: "YOUR_AUTH_DOMAIN",
-       projectId: "YOUR_PROJECT_ID",
-       storageBucket: "YOUR_STORAGE_BUCKET",
-       messagingSenderId: "YOUR_MESSAGING_SENDER_ID",
-       appId: "YOUR_APP_ID"
-     };
-     ```
-
-5. Start the app:
+3. **Configure Firebase** (Required)
+   ```bash
+   # Copy the example environment file
+   cp .env.example .env
+   
+   # Add your Firebase configuration to .env
+   # Or create src/firebase/firebase-config-local.js with your config
    ```
+
+4. **Start the development server**
+   ```bash
    npm start
    ```
 
-### Initial Data Migration
+5. **Run on your device**
+   - Install **Expo Go** on your mobile device
+   - Scan the QR code displayed in your terminal
+   - Or use iOS Simulator / Android Emulator
 
-To populate the app with initial menu data:
+## 🧪 Testing
 
-1. Uncomment the data migration code in App.jsx:
-   ```javascript
-   /* React.useEffect(() => {
-     const migrateData = async () => {
-       try {
-         setMigrating(true);
-         await migrateMenuDataFromAPIToFirestore('https://raw.githubusercontent.com/Meta-Mobile-Developer-PC/Working-With-Data-API/main/capstone.json');
-         setMigrating(false);
-       } catch (error) {
-         console.error('Migration failed:', error);
-         setMigrationError(error.message || 'Migration failed');
-         setMigrating(false);
-         Alert.alert('Data Migration Failed', 'There was an error migrating the initial menu data. Please try again later.');
-       }
-     };
-     
-     migrateData();
-   }, []); */
-   ```
+### Running Tests
+```bash
+# Run all tests
+npm test
 
-2. Run the app once to migrate data, then comment the code back out
+# Run tests in watch mode
+npm run test:watch
 
-## 📊 Firebase Collections
-
-- **menu_items**: Restaurant menu items
-- **user_profiles**: User profile information 
-- **notification_preferences**: User notification settings
-
-## 🔨 Development
-
-### Code Style
-
-The project uses NativeWind (Tailwind CSS for React Native) for styling with class-based components:
-
-```jsx
-<View className="bg-primary p-4 rounded-lg">
-  <Text className="text-white text-lg">Hello Little Lemon!</Text>
-</View>
+# Generate coverage report
+npm run test:coverage
 ```
 
-### State Management Pattern
+### Testing Strategy
+- **Unit Tests** - Individual components and utilities
+- **Hook Tests** - Custom React hooks with proper mocking
+- **Integration Tests** - User flows and component interactions
+- **Firebase Mocking** - Isolated testing without external dependencies
 
-The app uses Zustand with a slice pattern for modular state management:
+## 📱 Deployment
+
+### Expo Go Development
+```bash
+# Start development server
+npm start
+
+# Share via QR code or link
+expo start --tunnel
+```
+
+### Building for Production
+```bash
+# Install EAS CLI
+npm install -g eas-cli
+
+# Configure build
+eas build:configure
+
+# Build for iOS
+eas build --platform ios
+
+# Build for Android
+eas build --platform android
+```
+
+## 🔧 Configuration
+
+### Environment Variables
+Create a `.env` file or `src/firebase/firebase-config-local.js`:
 
 ```javascript
-// Store slice example
-const createAuthSlice = (set, get) => ({
-  user: null,
-  isAuthenticated: false,
-  setUser: (user) => set({ user, isAuthenticated: !!user }),
-});
+export default {
+  apiKey: "your-api-key",
+  authDomain: "your-project.firebaseapp.com",
+  projectId: "your-project-id",
+  storageBucket: "your-project.appspot.com",
+  messagingSenderId: "123456789",
+  appId: "1:123456789:web:abcdef123456",
+  measurementId: "G-XXXXXXXXXX"
+};
 ```
 
-### Component Philosophy
+### Firebase Setup
+1. Create a Firebase project at [Firebase Console](https://console.firebase.google.com/)
+2. Enable Authentication with Email/Password
+3. Create a Firestore database
+4. Set up storage for images
+5. Configure security rules
 
-- Components should be focused, reusable, and single-purpose
-- Business logic belongs in hooks, not components
-- Use composition over inheritance
-- Prefer functional components with hooks
+## 🤝 Contributing
 
-## 🛡️ Security Notes
+### Development Workflow
+1. Fork the repository
+2. Create a feature branch (`git checkout -b feature/amazing-feature`)
+3. Make your changes
+4. Run tests (`npm test`)
+5. Commit your changes (`git commit -m 'Add amazing feature'`)
+6. Push to the branch (`git push origin feature/amazing-feature`)
+7. Open a Pull Request
 
-This project includes basic security features:
-
-- Firebase Authentication for user management
-- Firestore security rules for data access control
-- Client-side input validation
-
-For production use, consider implementing:
-- Enhanced Firebase security rules
-- Email verification
-- Social auth providers
-- Firebase Analytics for usage tracking
-- Push notifications with Firebase Cloud Messaging
-
-## 📝 Future Enhancements
-
-- [ ] Ordering functionality
-- [ ] Payment integration
-- [ ] Table reservations
-- [ ] User reviews and ratings
-- [ ] Push notifications
-- [ ] Dark mode
-- [ ] Accessibility improvements
-- [ ] TypeScript migration
-
-## 🙏 Credits
-
-- Restaurant imagery from [Meta Mobile Developer Course](https://github.com/Meta-Mobile-Developer-PC/Working-With-Data-API)
-- Icons from [Expo Vector Icons](https://icons.expo.fyi/)
+### Code Standards
+- Follow the existing code style
+- Write tests for new features
+- Update documentation as needed
+- Ensure all tests pass before submitting
 
 ## 📄 License
 
-This project is licensed under the MIT License - see the LICENSE file for details.
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
+
+## 🙏 Acknowledgments
+
+- **Meta Mobile Developer Course** - Initial design inspiration and assets
+- **Expo Team** - Excellent development platform
+- **Firebase Team** - Robust backend services
+- **React Native Community** - Amazing ecosystem and tools
+
+## 📞 Contact
+
+**Your Name** - [your.email@example.com](mailto:your.email@example.com)
+
+Project Link: [https://github.com/yourusername/little-lemon](https://github.com/yourusername/little-lemon)
 
 ---
 
-Made with ❤️ as a demonstration of React Native and Firebase development.
+<div align="center">
+  <p>Made with ❤️ using React Native and Firebase</p>
+</div>
