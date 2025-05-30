@@ -31,7 +31,7 @@ const HomeScreen = () => {
             loadMenu()
           ]);
         } catch (error) {
-          console.error('Error loading data:', error);
+          // Handle error silently
         }
       };
       

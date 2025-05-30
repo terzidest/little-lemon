@@ -11,10 +11,16 @@ const LoginScreen = () => {
   
   const handleLogin = async (values) => {
     try {
-      await login(values);
-      // Navigation will be handled by auth state listener
+      await login(values, navigation);
+      // Navigation is handled in the login function
     } catch (err) {
-      Alert.alert('Login Failed', err.message);
+      // Error is already handled in useAuth hook
+      // Just show alert with user-friendly message
+      Alert.alert(
+        'Login Failed', 
+        err.message || 'Please check your credentials and try again.',
+        [{ text: 'OK', style: 'default' }]
+      );
     }
   };
   

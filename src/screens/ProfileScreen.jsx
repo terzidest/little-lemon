@@ -70,11 +70,10 @@ const ProfileScreen = () => {
           style: 'destructive',
           onPress: async () => {
             try {
-              await logout();
-              // Navigation will be handled by auth state listener
+              await logout(navigation);
+              // Navigation is handled in the logout function
             } catch (error) {
-              console.error('Error during logout:', error);
-              navigation.replace('Login');
+              // Handle error silently
             }
           },
         },

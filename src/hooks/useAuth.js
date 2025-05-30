@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { CommonActions } from '@react-navigation/native';
 import { useStore } from '../store/useStore';
 import { 
   loginWithEmailAndPassword, 
@@ -39,45 +40,35 @@ const useAuth = () => {
   const [error, setError] = useState(null);
   
   /**
-   * Handle authentication state to prevent UI flicker
-   */
-  const startAuthenticating = () => {
-    if (window.setIsAuthenticating) {
-      window.setIsAuthenticating(true);
-    }
-  };
-  
-  /**
-   * Reset authentication state if there's an error
-   */
-  const resetAuthenticating = () => {
-    if (window.setIsAuthenticating) {
-      window.setIsAuthenticating(false);
-    }
-  };
-  
-  /**
    * Login with email and password
    * 
    * @param {Object} credentials - Login credentials
+   * @param {Object} navigation - Navigation object
    * @returns {Promise<Object>} User object
    */
-  const login = async (credentials) => {
+  const login = async (credentials, navigation) => {
     setLoading(true);
     setError(null);
     setAuthError(null);
     
     try {
-      startAuthenticating();
-      await new Promise(resolve => setTimeout(resolve, 50));
-      
       const result = await loginWithEmailAndPassword(credentials);
+      
+      // Navigate to home immediately after successful login
+      if (navigation && result.user) {
+        navigation.dispatch(
+          CommonActions.reset({
+            index: 0,
+            routes: [{ name: 'Home' }],
+          })
+        );
+      }
+      
       return result;
     } catch (err) {
       const errorMessage = handleAuthError(err);
       setError(errorMessage);
       setAuthError(errorMessage);
-      resetAuthenticating();
       throw new Error(errorMessage);
     } finally {
       setLoading(false);
@@ -88,28 +79,36 @@ const useAuth = () => {
    * Register new user with email and password
    * 
    * @param {Object} data - Registration data
+   * @param {Object} navigation - Navigation object
    * @returns {Promise<Object>} User object
    */
-  const register = async (data) => {
+  const register = async (data, navigation) => {
     setLoading(true);
     setError(null);
     setAuthError(null);
     
     try {
-      startAuthenticating();
-      await new Promise(resolve => setTimeout(resolve, 50));
-      
       const userCredential = await registerWithEmailAndPassword(data);
       
       // Initialize user profile
       if (userCredential?.user) {
-        updateUserProfile({
+        await updateUserProfile({
           firstName: data.firstName,
           lastName: data.lastName,
           email: data.email,
           phone: data.phone || '',
           avatar: null
         });
+        
+        // Navigate to home immediately after successful registration
+        if (navigation) {
+          navigation.dispatch(
+            CommonActions.reset({
+              index: 0,
+              routes: [{ name: 'Home' }],
+            })
+          );
+        }
       }
       
       return userCredential;
@@ -117,10 +116,32 @@ const useAuth = () => {
       const errorMessage = handleAuthError(err);
       setError(errorMessage);
       setAuthError(errorMessage);
-      resetAuthenticating();
       throw new Error(errorMessage);
     } finally {
       setLoading(false);
+    }
+  };
+  
+  /**
+   * Logout and navigate to login
+   * 
+   * @param {Object} navigation - Navigation object
+   */
+  const logoutAndNavigate = async (navigation) => {
+    try {
+      await logout();
+      
+      // Navigate to login after logout
+      if (navigation) {
+        navigation.dispatch(
+          CommonActions.reset({
+            index: 0,
+            routes: [{ name: 'Login' }],
+          })
+        );
+      }
+    } catch (error) {
+      console.error('Logout error:', error);
     }
   };
   
@@ -155,7 +176,7 @@ const useAuth = () => {
     login,
     register,
     resetPassword,
-    logout
+    logout: logoutAndNavigate
   };
 };
 

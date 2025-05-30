@@ -11,10 +11,16 @@ const RegisterScreen = () => {
   
   const handleRegister = async (values) => {
     try {
-      await register(values);
-      // Navigation will be handled by auth state listener
+      await register(values, navigation);
+      // Navigation is handled in the register function
     } catch (err) {
-      Alert.alert('Registration Failed', err.message);
+      // Error is already handled in useAuth hook
+      // Just show alert with user-friendly message
+      Alert.alert(
+        'Registration Failed', 
+        err.message || 'Please check your information and try again.',
+        [{ text: 'OK', style: 'default' }]
+      );
     }
   };
   

@@ -3,7 +3,7 @@
  */
 const createAppSlice = (set) => ({
   // App state
-  isLoading: true,
+  isLoading: false,
   appError: null,
   
   // Set loading state

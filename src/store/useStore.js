@@ -29,6 +29,7 @@ export const useStore = create(
         isAuthenticated: false,
         authLoading: false,
         authError: null,
+        isAuthenticating: false,
         
         // Profile state
         userProfile: {

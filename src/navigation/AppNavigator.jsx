@@ -16,101 +16,131 @@ import { auth } from '../firebase/config';
 
 const Stack = createNativeStackNavigator();
 
-// Define screen groups for cleaner navigation structure
-const AuthStack = () => (
-  <>
-    <Stack.Screen 
-      name="Login" 
-      component={LoginScreen} 
-      options={{ animationEnabled: false }}
-    />
-    <Stack.Screen name="Register" component={RegisterScreen} />
-  </>
-);
-
-const MainStack = () => (
-  <>
-    <Stack.Screen 
-      name="Home" 
-      component={HomeScreen} 
-      options={{ animationEnabled: false }}
-    />
-    <Stack.Screen name="Profile" component={ProfileScreen} />
-  </>
-);
-
 export const AppNavigator = () => {
   const { 
-    isLoading, 
     isAuthenticated,
-    setIsLoading,
-    setUser
+    setUser,
   } = useStore();
   
-  const [isAppReady, setIsAppReady] = useState(false);
-  const [isAuthenticating, setIsAuthenticating] = useState(false);
-  
-  // Create a function to be used by auth screens
-  const handleAuthStateChange = (isAuthenticating) => {
-    setIsAuthenticating(isAuthenticating);
-  };
+  const [isAuthLoading, setIsAuthLoading] = useState(true);
+  const [authError, setAuthError] = useState(null);
 
-  // Initialize app
+  // Initialize app and set up auth listener
   useEffect(() => {
-    const initialize = async () => {
-      try {
-        setIsLoading(true);
-      } catch (error) {
-        console.error('Error initializing app:', error);
-      } finally {
-        setIsLoading(false);
-        setIsAppReady(true);
-      }
-    };
+    let unsubscribe;
+    let timeoutId;
     
-    initialize();
-  }, []);
-  
-  // Set up auth listener
-  useEffect(() => {
-    const unsubscribe = onAuthStateChanged(auth, (user) => {
-      if (isAuthenticating && user) {
-        // During active authentication, we delay setting the user
-        // to prevent navigation flickers
-        setTimeout(() => {
-          setUser(user);
-          setTimeout(() => setIsAuthenticating(false), 300);
-        }, 500);
-      } else {
-        // For normal auth state changes or logout
+    try {
+      // Set up auth state listener
+      unsubscribe = onAuthStateChanged(auth, (user) => {
+        // Clear timeout since auth responded
+        if (timeoutId) {
+          clearTimeout(timeoutId);
+        }
+        
+        // Update user state
         setUser(user);
-      }
-    });
+        
+        // Mark auth as loaded
+        setIsAuthLoading(false);
+      }, (error) => {
+        setAuthError(error.message);
+        setIsAuthLoading(false);
+      });
+      
+      // Set a timeout in case Firebase doesn't respond
+      timeoutId = setTimeout(() => {
+        setIsAuthLoading(false);
+      }, 3000); // 3 second timeout
+      
+    } catch (error) {
+      setAuthError(error.message);
+      setIsAuthLoading(false);
+    }
     
-    return unsubscribe;
-  }, [isAuthenticating]);
-  
-  // Make auth state handler available to other components
-  useEffect(() => {
-    window.setIsAuthenticating = handleAuthStateChange;
-    
+    // Cleanup
     return () => {
-      delete window.setIsAuthenticating;
+      if (unsubscribe) {
+        unsubscribe();
+      }
+      if (timeoutId) {
+        clearTimeout(timeoutId);
+      }
     };
-  }, []);
+  }, [setUser]);
 
-  // Show splash screen while loading
-  if (isLoading || !isAppReady) {
+  // Show splash screen while checking auth
+  if (isAuthLoading) {
     return <SplashScreen />;
   }
 
   return (
     <NavigationContainer>
-      <Stack.Navigator screenOptions={{ headerShown: false }}>
-        {isAuthenticated || isAuthenticating ? (
-          MainStack()
+      <Stack.Navigator 
+        screenOptions={{ 
+          headerShown: false,
+          animation: 'fade',
+          animationDuration: 200
+        }}
+      >
+        {isAuthenticated ? (
+          // Authenticated screens
+          <>
+            <Stack.Screen 
+              name="Home" 
+              component={HomeScreen}
+            />
+            <Stack.Screen 
+              name="Profile" 
+              component={ProfileScreen}
+              options={{
+                animation: 'slide_from_right'
+              }}
+            />
+            <Stack.Screen 
+              name="Login" 
+              component={LoginScreen}
+              options={{
+                animationEnabled: false
+              }}
+            />
+            <Stack.Screen 
+              name="Register" 
+              component={RegisterScreen}
+              options={{
+                animationEnabled: false
+              }}
+            />
+          </>
         ) : (
-          AuthStack()
+          // Non-authenticated screens
+          <>
+            <Stack.Screen 
+              name="Login" 
+              component={LoginScreen}
+            />
+            <Stack.Screen 
+              name="Register" 
+              component={RegisterScreen}
+              options={{
+                animation: 'slide_from_right'
+              }}
+            />
+            <Stack.Screen 
+              name="Home" 
+              component={HomeScreen}
+              options={{
+                animationEnabled: false
+              }}
+            />
+            <Stack.Screen 
+              name="Profile" 
+              component={ProfileScreen}
+              options={{
+                animationEnabled: false
+              }}
+            />
+          </>
         )}
       </Stack.Navigator>
     </NavigationContainer>

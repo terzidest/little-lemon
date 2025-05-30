@@ -28,7 +28,7 @@ export const registerWithEmailAndPassword = async (data) => {
     
     return userCredential;
   } catch (error) {
-    console.error('Error during registration:', error);
+    // Don't log to console to prevent error showing at bottom of screen
     throw error;
   }
 };
@@ -44,7 +44,7 @@ export const loginWithEmailAndPassword = async (credentials) => {
       credentials.password
     );
   } catch (error) {
-    console.error('Error during login:', error);
+    // Don't log to console to prevent error showing at bottom of screen
     throw error;
   }
 };
@@ -56,7 +56,7 @@ export const logout = async () => {
   try {
     await signOut(auth);
   } catch (error) {
-    console.error('Error during logout:', error);
+    // Don't log to console to prevent error showing at bottom of screen
     throw error;
   }
 };
@@ -68,7 +68,7 @@ export const resetPassword = async (email) => {
   try {
     await sendPasswordResetEmail(auth, email);
   } catch (error) {
-    console.error('Error sending password reset email:', error);
+    // Don't log to console to prevent error showing at bottom of screen
     throw error;
   }
 };
