@@ -1,4 +1,3 @@
-import React from 'react';
 import { View, TouchableOpacity, Text, ActivityIndicator } from 'react-native';
 import { Input } from '../ui/Input';
 import { Button } from '../ui/Button';

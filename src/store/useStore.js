@@ -1,6 +1,6 @@
 import { create } from 'zustand';
-import { createJSONStorage, persist } from 'zustand/middleware';
-import AsyncStorage from '@react-native-async-storage/async-storage';
+import { onAuthStateChange } from '../firebase/auth';
+
 
 // Import slices
 import createAuthSlice from './slices/authSlice';
@@ -99,5 +99,5 @@ export const useNotificationsStore = (selector) => useStore(selector);
 export const useMenuStore = (selector) => useStore(selector);
 export const useAppStore = (selector) => useStore(selector);
 
-// Add missing import
-import { onAuthStateChange } from '../firebase/auth';
+
+
