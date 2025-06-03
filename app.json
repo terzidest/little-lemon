@@ -1,7 +1,7 @@
 {
   "expo": {
     "name": "little_lemon",
-    "slug": "little_lemon",
+    "slug": "littlelemon",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
@@ -33,8 +33,9 @@
       "firebaseAppId": "FIREBASE_APP_ID",
       "firebaseMeasurementId": "FIREBASE_MEASUREMENT_ID",
       "eas": {
-        "projectId": "YOUR_EAS_PROJECT_ID"
+        "projectId": "d67ec55c-8553-4f72-b1f6-6a6f07ae4192"
       }
-    }
+    },
+    "owner": "terzidest"
   }
 }

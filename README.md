@@ -1,7 +1,7 @@
 # 🍋 Little Lemon Restaurant App
 
 <div align="center">
-  <img src="https://raw.githubusercontent.com/Meta-Mobile-Developer-PC/Working-With-Data-API/main/images/little-lemon-banner.png" alt="Little Lemon Banner" width="600"/>
+  <img src="assets/little-lemon.png" alt="Little Lemon Banner" width="300" height="600"/>
 </div>
 
 <div align="center">
@@ -10,7 +10,7 @@
 [![Expo](https://img.shields.io/badge/Expo-~52.0-black.svg)](https://expo.dev/)
 [![Firebase](https://img.shields.io/badge/Firebase-10.14.1-orange.svg)](https://firebase.google.com/)
 [![TypeScript](https://img.shields.io/badge/JavaScript-ES6+-yellow.svg)](https://www.javascript.com/)
-[![License](https://img.shields.io/badge/License-MIT-green.svg)](LICENSE)
+
 
 </div>
 
@@ -96,7 +96,6 @@ src/
 ### Prerequisites
 - **Node.js** >= 14.0.0
 - **npm** or **yarn**
-- **Expo CLI** installed globally
 - **iOS Simulator** (macOS) or **Android Studio** (for emulators)
 
 ### Installation
@@ -201,26 +200,6 @@ export default {
 4. Set up storage for images
 5. Configure security rules
 
-## 🤝 Contributing
-
-### Development Workflow
-1. Fork the repository
-2. Create a feature branch (`git checkout -b feature/amazing-feature`)
-3. Make your changes
-4. Run tests (`npm test`)
-5. Commit your changes (`git commit -m 'Add amazing feature'`)
-6. Push to the branch (`git push origin feature/amazing-feature`)
-7. Open a Pull Request
-
-### Code Standards
-- Follow the existing code style
-- Write tests for new features
-- Update documentation as needed
-- Ensure all tests pass before submitting
-
-## 📄 License
-
-This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
 
 ## 🙏 Acknowledgments
 
@@ -228,15 +207,3 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 - **Expo Team** - Excellent development platform
 - **Firebase Team** - Robust backend services
 - **React Native Community** - Amazing ecosystem and tools
-
-## 📞 Contact
-
-**Your Name** - [your.email@example.com](mailto:your.email@example.com)
-
-Project Link: [https://github.com/yourusername/little-lemon](https://github.com/yourusername/little-lemon)
-
----
-
-<div align="center">
-  <p>Made with ❤️ using React Native and Firebase</p>
-</div>
