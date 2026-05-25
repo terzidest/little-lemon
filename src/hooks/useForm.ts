@@ -1,64 +1,63 @@
 import { useState, useEffect } from 'react';
 
-/**
- * Custom hook for form state management and validation
- * 
- * @param {Object} initialValues - Initial form values
- * @param {Function} validate - Validation function that returns error object
- * @returns {Object} Form state and handlers
- */
-const useForm = (initialValues = {}, validate) => {
-  const [values, setValues] = useState(initialValues);
-  const [errors, setErrors] = useState({});
-  const [touched, setTouched] = useState({});
+type FormErrors<T> = Partial<Record<keyof T, string>>;
+type TouchedFields<T> = Partial<Record<keyof T, boolean>>;
+
+const useForm = <T extends object>(
+  initialValues: T,
+  validate?: (values: T) => FormErrors<T>
+) => {
+  const [values, setValues] = useState<T>(initialValues);
+  const [errors, setErrors] = useState<FormErrors<T>>({});
+  const [touched, setTouched] = useState<TouchedFields<T>>({});
   const [isValid, setIsValid] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
-  
-  const handleChange = (name, value) => {
+
+  const handleChange = <K extends keyof T>(name: K, value: T[K]) => {
     setValues(prev => ({ ...prev, [name]: value }));
     setTouched(prev => ({ ...prev, [name]: true }));
   };
-  
-  const validateForm = () => {
+
+  const validateForm = (): boolean => {
     if (!validate) return true;
-    
-    // Mark all fields as touched when form is submitted
-    const allTouched = Object.keys(values).reduce((acc, key) => {
-      acc[key] = true;
-      return acc;
-    }, {});
-    
+
+    const allTouched = (Object.keys(initialValues) as Array<keyof T>).reduce<TouchedFields<T>>(
+      (acc, key) => {
+        acc[key] = true;
+        return acc;
+      },
+      {}
+    );
+
     setTouched(allTouched);
     setIsSubmitting(true);
-    
+
     const newErrors = validate(values);
     setErrors(newErrors);
-    
+
     const isFormValid = Object.keys(newErrors).length === 0;
     setIsValid(isFormValid);
-    
+
     return isFormValid;
   };
-  
-  // Validate whenever values change and fields have been touched
+
   useEffect(() => {
     if (Object.keys(touched).length > 0) {
-      const newErrors = validate ? validate(values) : {};
-      
-      // Only show errors for touched fields unless submitting
+      const newErrors: FormErrors<T> = validate ? validate(values) : {};
+
       if (!isSubmitting) {
-        Object.keys(newErrors).forEach(key => {
+        (Object.keys(newErrors) as Array<keyof T>).forEach(key => {
           if (!touched[key]) {
             delete newErrors[key];
           }
         });
       }
-      
+
       setErrors(newErrors);
       setIsValid(Object.keys(newErrors).length === 0);
     }
   }, [values, touched, isSubmitting]);
-  
+
   return {
     values,
     errors,
@@ -74,7 +73,7 @@ const useForm = (initialValues = {}, validate) => {
       setErrors({});
       setTouched({});
       setIsSubmitting(false);
-    }
+    },
   };
 };
 

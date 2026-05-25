@@ -1,13 +1,9 @@
 import { useState } from 'react';
-import { useStore } from '../store/useStore';
-import * as ImagePicker from 'expo-image-picker';
 import { Alert } from 'react-native';
+import * as ImagePicker from 'expo-image-picker';
+import { useStore } from '../store/useStore';
+import type { UserProfile, NotificationPreferences } from '../types';
 
-/**
- * Custom hook for profile management
- * 
- * @returns {Object} Profile state and methods
- */
 const useProfile = () => {
   const {
     userProfile,
@@ -21,8 +17,8 @@ const useProfile = () => {
     loadUserProfile,
     updateNotificationPreferences,
     saveNotificationPreferences,
-    loadNotificationPreferences
-  } = useStore(state => ({
+    loadNotificationPreferences,
+  } = useStore((state) => ({
     userProfile: state.userProfile,
     profileLoading: state.profileLoading,
     profileError: state.profileError,
@@ -34,112 +30,78 @@ const useProfile = () => {
     loadUserProfile: state.loadUserProfile,
     updateNotificationPreferences: state.updateNotificationPreferences,
     saveNotificationPreferences: state.saveNotificationPreferences,
-    loadNotificationPreferences: state.loadNotificationPreferences
+    loadNotificationPreferences: state.loadNotificationPreferences,
   }));
-  
+
   const [loading, setLoading] = useState(false);
-  const [error, setError] = useState(null);
-  
-  /**
-   * Load user profile and notification preferences
-   * 
-   * @returns {Promise<void>}
-   */
-  const loadProfile = async () => {
+  const [error, setError] = useState<string | null>(null);
+
+  const loadProfile = async (): Promise<void> => {
     setLoading(true);
     setError(null);
-    
     try {
-      await Promise.all([
-        loadUserProfile(),
-        loadNotificationPreferences()
-      ]);
+      await Promise.all([loadUserProfile(), loadNotificationPreferences()]);
     } catch (err) {
-      setError(err.message || 'Failed to load profile');
+      const message = err instanceof Error ? err.message : 'Failed to load profile';
+      setError(message);
       console.error('Error loading profile:', err);
     } finally {
       setLoading(false);
     }
   };
-  
-  /**
-   * Save user profile and notification preferences
-   * 
-   * @returns {Promise<void>}
-   */
-  const saveProfile = async () => {
+
+  const saveProfile = async (): Promise<void> => {
     setLoading(true);
     setError(null);
-    
     try {
-      await Promise.all([
-        saveUserProfile(),
-        saveNotificationPreferences()
-      ]);
+      await Promise.all([saveUserProfile(), saveNotificationPreferences()]);
     } catch (err) {
-      setError(err.message || 'Failed to save profile');
+      const message = err instanceof Error ? err.message : 'Failed to save profile';
+      setError(message);
       console.error('Error saving profile:', err);
       throw err;
     } finally {
       setLoading(false);
     }
   };
-  
-  /**
-   * Update profile data
-   * 
-   * @param {Object} data - Profile data to update
-   */
-  const updateProfile = (data) => {
+
+  const updateProfile = (data: Partial<UserProfile>): void => {
     updateUserProfile(data);
   };
-  
-  /**
-   * Update notification preferences
-   * 
-   * @param {Object} preferences - Notification preferences to update
-   */
-  const updatePreferences = (preferences) => {
+
+  const updatePreferences = (preferences: Partial<NotificationPreferences>): void => {
     updateNotificationPreferences(preferences);
   };
-  
-  /**
-   * Pick image from device library
-   * 
-   * @returns {Promise<void>}
-   */
-  const pickImage = async () => {
+
+  const pickImage = async (): Promise<void> => {
     try {
       const { status } = await ImagePicker.requestMediaLibraryPermissionsAsync();
-      
       if (status !== 'granted') {
         Alert.alert('Permission needed', 'Please grant permission to access your photo library');
         return;
       }
-      
+
       const result = await ImagePicker.launchImageLibraryAsync({
-        mediaTypes: ['images'],
+        mediaTypes: ['images'] as ImagePicker.MediaType[],
         allowsEditing: true,
         aspect: [1, 1],
         quality: 1,
       });
-      
+
       if (!result.canceled && result.assets && result.assets.length > 0) {
         updateUserProfile({ avatar: result.assets[0].uri });
       }
     } catch (err) {
-      setError(err.message || 'Failed to pick image');
+      const message = err instanceof Error ? err.message : 'Failed to pick image';
+      setError(message);
       console.error('Error picking image:', err);
     }
   };
-  
-  /**
-   * Remove profile avatar
-   */
-  const removeAvatar = () => {
+
+  const removeAvatar = (): void => {
     updateUserProfile({ avatar: null });
   };
-  
+
   return {
     profile: userProfile,
     preferences: notificationPreferences,
@@ -150,7 +112,7 @@ const useProfile = () => {
     updateProfile,
     updatePreferences,
     pickImage,
-    removeAvatar
+    removeAvatar,
   };
 };
 

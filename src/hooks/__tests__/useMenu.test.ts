@@ -2,10 +2,11 @@ import { renderHook } from '@testing-library/react-native';
 import useMenu from '../useMenu';
 import { useStore } from '../../store/useStore';
 
-// Mock the store
 jest.mock('../../store/useStore', () => ({
   useStore: jest.fn(),
 }));
+
+const mockUseStore = useStore as jest.MockedFunction<typeof useStore>;
 
 describe('useMenu Hook', () => {
   const mockStore = {
@@ -39,13 +40,13 @@ describe('useMenu Hook', () => {
   };
 
   beforeEach(() => {
-    useStore.mockReturnValue(mockStore);
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    mockUseStore.mockReturnValue(mockStore as any);
     jest.clearAllMocks();
   });
 
   it('should return menu data from store', () => {
     const { result } = renderHook(() => useMenu());
-
     expect(result.current.menuItems).toEqual(mockStore.menuItems);
     expect(result.current.loading).toBe(false);
     expect(result.current.selectedCategories).toEqual([]);
@@ -54,40 +55,28 @@ describe('useMenu Hook', () => {
 
   it('should call fetchMenu when loadMenu is called', async () => {
     const { result } = renderHook(() => useMenu());
-
     await result.current.loadMenu();
-
     expect(mockStore.fetchMenu).toHaveBeenCalledTimes(1);
   });
 
   it('should return unique categories from menu items', () => {
     const { result } = renderHook(() => useMenu());
-
     const categories = result.current.getCategories();
-
     expect(categories).toEqual(['starters']);
   });
 
   it('should handle loading state correctly', () => {
-    useStore.mockReturnValue({
-      ...mockStore,
-      menuLoading: true,
-    });
-
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    mockUseStore.mockReturnValue({ ...mockStore, menuLoading: true } as any);
     const { result } = renderHook(() => useMenu());
-
     expect(result.current.loading).toBe(true);
   });
 
   it('should handle error state correctly', () => {
     const errorMessage = 'Failed to load menu';
-    useStore.mockReturnValue({
-      ...mockStore,
-      menuError: errorMessage,
-    });
-
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    mockUseStore.mockReturnValue({ ...mockStore, menuError: errorMessage } as any);
     const { result } = renderHook(() => useMenu());
-
     expect(result.current.error).toBe(errorMessage);
   });
 });

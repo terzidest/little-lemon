@@ -1,11 +1,6 @@
 import { useState } from 'react';
 import { useStore } from '../store/useStore';
 
-/**
- * Custom hook for menu operations
- * 
- * @returns {Object} Menu state and methods
- */
 const useMenu = () => {
   const {
     menuItems,
@@ -17,8 +12,8 @@ const useMenu = () => {
     fetchMenu,
     toggleCategory,
     setSearchTerm,
-    resetFilters
-  } = useStore(state => ({
+    resetFilters,
+  } = useStore((state) => ({
     menuItems: state.menuItems,
     allMenuItems: state.allMenuItems,
     menuLoading: state.menuLoading,
@@ -28,49 +23,35 @@ const useMenu = () => {
     fetchMenu: state.fetchMenu,
     toggleCategory: state.toggleCategory,
     setSearchTerm: state.setSearchTerm,
-    resetFilters: state.resetFilters
+    resetFilters: state.resetFilters,
   }));
-  
+
   const [loading, setLoading] = useState(false);
-  const [error, setError] = useState(null);
-  
-  /**
-   * Fetch menu with current filters
-   * 
-   * @returns {Promise<void>}
-   */
-  const loadMenu = async () => {
+  const [error, setError] = useState<string | null>(null);
+
+  const loadMenu = async (): Promise<void> => {
     setLoading(true);
     setError(null);
-    
     try {
       await fetchMenu();
     } catch (err) {
-      setError(err.message || 'Failed to load menu items');
+      const message = err instanceof Error ? err.message : 'Failed to load menu items';
+      setError(message);
     } finally {
       setLoading(false);
     }
   };
-  
-  /**
-   * Get list of unique categories from menu items
-   * 
-   * @returns {Array<string>} Array of category names
-   */
-  const getCategories = () => {
-    // Use allMenuItems if available to get all possible categories
+
+  const getCategories = (): string[] => {
     const items = allMenuItems.length > 0 ? allMenuItems : menuItems;
-    
-    const categories = items
+    return items
       .map(item => item.category)
-      .filter((value, index, self) => value && self.indexOf(value) === index);
-    
-    return categories;
+      .filter((value, index, self) => Boolean(value) && self.indexOf(value) === index);
   };
-  
+
   return {
     menuItems,
-    allMenuItems, // Expose all menu items
+    allMenuItems,
     loading: loading || menuLoading,
     error: error || menuError,
     selectedCategories,
@@ -79,7 +60,7 @@ const useMenu = () => {
     toggleCategory,
     setSearchTerm,
     resetFilters,
-    getCategories
+    getCategories,
   };
 };
 
