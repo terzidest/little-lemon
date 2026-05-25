@@ -1,58 +1,48 @@
 import { useState } from 'react';
-import { View, Text, Image, ActivityIndicator } from 'react-native';
+import { View, Text, Image, ActivityIndicator, type NativeSyntheticEvent, type ImageErrorEventData } from 'react-native';
 import { MENU_IMAGE_BASE_URL } from '../utils/helpers';
+import type { MenuItem } from '../types';
 
-export const MenuItemCard = ({ item }) => {
+interface MenuItemCardProps {
+  item: MenuItem;
+}
+
+export const MenuItemCard = ({ item }: MenuItemCardProps) => {
   const [imageLoading, setImageLoading] = useState(true);
   const [imageError, setImageError] = useState(false);
-  
-  // Process the image URL
-  const processImageUrl = () => {
+
+  const processImageUrl = (): string | null => {
     if (!item.image) return null;
-    
-    // If it's already a full URL, use it directly
-    if (item.image.startsWith('http')) {
-      return item.image;
-    }
-    
-    // Otherwise, append it to the base URL
+    if (item.image.startsWith('http')) return item.image;
     return `${MENU_IMAGE_BASE_URL}${item.image}`;
   };
-  
+
   const imageUrl = processImageUrl();
-  
-  const handleImageLoad = () => {
-    setImageLoading(false);
-  };
-  
-  const handleImageError = (error) => {
-    console.log('Image failed to load:', imageUrl);
-    console.log('Error:', error.nativeEvent?.error);
+
+  const handleImageLoad = () => setImageLoading(false);
+
+  const handleImageError = (_error: NativeSyntheticEvent<ImageErrorEventData>) => {
     setImageLoading(false);
     setImageError(true);
   };
-  
+
   return (
     <View className="flex-row justify-between items-center mb-3 border-b border-gray-200 pb-3">
       <View className="flex-1 mr-4">
-        <Text className="text-lg font-bold text-primary mb-1">
-          {item.name || 'Unnamed Item'}
-        </Text>
+        <Text className="text-lg font-bold text-primary mb-1">{item.name || 'Unnamed Item'}</Text>
         <Text className="text-sm text-darkGray mb-2 flex-shrink" numberOfLines={2}>
           {item.description || 'No description available'}
         </Text>
         <Text className="text-base font-bold text-primary">
-          ${parseFloat(item.price || 0).toFixed(2)}
+          ${parseFloat(String(item.price || 0)).toFixed(2)}
         </Text>
-        
-        {/* Add category badge */}
         {item.category && (
           <View className="mt-1 bg-gray-100 self-start rounded-full px-2 py-1">
             <Text className="text-xs text-gray-700 capitalize">{item.category}</Text>
           </View>
         )}
       </View>
-      
+
       <View className="w-24 h-24 rounded-lg overflow-hidden bg-gray-200">
         {imageUrl && !imageError ? (
           <>

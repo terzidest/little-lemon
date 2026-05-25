@@ -1,29 +1,50 @@
 import React from 'react';
-import { 
-  View, 
-  Text, 
-  ScrollView, 
-  KeyboardAvoidingView, 
+import {
+  View,
+  Text,
+  ScrollView,
+  KeyboardAvoidingView,
   Platform,
-  SafeAreaView
+  SafeAreaView,
+  type ViewProps,
 } from 'react-native';
 import Header from '../Header';
 
-/**
- * Base Screen component that provides consistent layout and styling
- */
-const Screen = ({ 
-  children, 
-  title, 
+interface ScreenHeaderProps {
+  showBackButton?: boolean;
+  onBackPress?: () => void;
+  firstName?: string;
+  lastName?: string;
+  avatar?: string | null;
+  showAvatar?: boolean;
+}
+
+interface ScreenOwnProps {
+  children?: React.ReactNode;
+  title?: string;
+  subtitle?: string;
+  showBackButton?: boolean;
+  showHeader?: boolean;
+  headerProps?: ScreenHeaderProps;
+  padding?: boolean;
+  scroll?: boolean;
+  keyboardAvoidingView?: boolean;
+}
+
+type ScreenProps = ScreenOwnProps & Omit<ViewProps, keyof ScreenOwnProps | 'children'>;
+
+const Screen = ({
+  children,
+  title,
   subtitle,
-  showBackButton = false, 
+  showBackButton = false,
   showHeader = true,
   headerProps = {},
   padding = true,
   scroll = true,
   keyboardAvoidingView = true,
-  ...props 
-}) => {
+  ...props
+}: ScreenProps) => {
   const Content = () => (
     <View className={`flex-1 ${padding ? 'px-5 py-2' : ''}`}>
       {title && <Text className="text-2xl font-bold text-primary mb-2">{title}</Text>}
@@ -34,16 +55,10 @@ const Screen = ({
 
   const screenContent = (
     <>
-      {showHeader && (
-        <Header 
-          showBackButton={showBackButton}
-          {...headerProps}
-        />
-      )}
-      
+      {showHeader && <Header showBackButton={showBackButton} {...headerProps} />}
       {scroll ? (
-        <ScrollView 
-          className="flex-1" 
+        <ScrollView
+          className="flex-1"
           keyboardShouldPersistTaps="handled"
           contentContainerStyle={{ flexGrow: 1 }}
         >
@@ -54,7 +69,7 @@ const Screen = ({
       )}
     </>
   );
-  
+
   if (keyboardAvoidingView) {
     return (
       <KeyboardAvoidingView
@@ -67,7 +82,7 @@ const Screen = ({
       </KeyboardAvoidingView>
     );
   }
-  
+
   return (
     <SafeAreaView className="flex-1 bg-white" {...props}>
       {screenContent}

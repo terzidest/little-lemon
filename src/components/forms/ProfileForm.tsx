@@ -5,47 +5,47 @@ import { Button } from '../ui/Button';
 import { getInitials } from '../../utils/helpers';
 import useForm from '../../hooks/useForm';
 import { validateProfile } from '../../utils/validation';
+import type { UserProfile } from '../../types';
 
-/**
- * Profile information form component
- */
-const ProfileForm = ({
-  profile,
-  onSave,
-  onPickImage,
-  onRemoveImage,
-  loading
-}) => {
-  const {
-    values,
-    errors,
-    handleChange,
-    validateForm,
-    isValid
-  } = useForm({
-    firstName: profile.firstName || '',
-    lastName: profile.lastName || '',
-    email: profile.email || '',
-    phone: profile.phone || ''
-  }, validateProfile);
-  
+interface ProfileFormValues {
+  firstName: string;
+  lastName: string;
+  email: string;
+  phone: string;
+}
+
+interface ProfileFormProps {
+  profile: UserProfile;
+  onSave: (values: ProfileFormValues) => void;
+  onPickImage: () => void;
+  onRemoveImage: () => void;
+  loading: boolean;
+}
+
+const ProfileForm = ({ profile, onSave, onPickImage, onRemoveImage, loading }: ProfileFormProps) => {
+  const { values, errors, handleChange, validateForm, isValid } = useForm(
+    {
+      firstName: profile.firstName || '',
+      lastName: profile.lastName || '',
+      email: profile.email || '',
+      phone: profile.phone || '',
+    },
+    validateProfile as (values: ProfileFormValues) => Partial<Record<keyof ProfileFormValues, string>>
+  );
+
   const handleSave = () => {
     if (validateForm()) {
       onSave(values);
     }
   };
-  
+
   return (
     <View>
-      {/* Avatar Section */}
       <View className="mb-6">
         <Text className="mb-2 text-base">Avatar</Text>
         <View className="flex-row items-center">
           {profile.avatar ? (
-            <Image 
-              source={{ uri: profile.avatar }} 
-              className="w-20 h-20 rounded-full mr-4"
-            />
+            <Image source={{ uri: profile.avatar }} className="w-20 h-20 rounded-full mr-4" />
           ) : (
             <View className="w-20 h-20 rounded-full bg-lightGray mr-4 items-center justify-center">
               <Text className="text-white text-2xl font-bold">
@@ -53,27 +53,13 @@ const ProfileForm = ({
               </Text>
             </View>
           )}
-          
           <View>
-            <Button 
-              title="Change" 
-              onPress={onPickImage}
-              variant="primary"
-              size="sm"
-              className="mb-2 w-32"
-            />
-            <Button 
-              title="Remove" 
-              onPress={onRemoveImage}
-              variant="outline"
-              size="sm"
-              className="w-32"
-            />
+            <Button title="Change" onPress={onPickImage} variant="primary" size="sm" className="mb-2 w-32" />
+            <Button title="Remove" onPress={onRemoveImage} variant="outline" size="sm" className="w-32" />
           </View>
         </View>
       </View>
-      
-      {/* Form Inputs */}
+
       <Input
         label="First Name"
         value={values.firstName}
@@ -82,7 +68,6 @@ const ProfileForm = ({
         autoCapitalize="words"
         className="bg-white mb-3"
       />
-      
       <Input
         label="Last Name"
         value={values.lastName}
@@ -90,7 +75,6 @@ const ProfileForm = ({
         autoCapitalize="words"
         className="bg-white mb-3"
       />
-      
       <Input
         label="Email"
         value={values.email}
@@ -100,7 +84,6 @@ const ProfileForm = ({
         autoCapitalize="none"
         className="bg-white mb-3"
       />
-      
       <Input
         label="Phone Number"
         value={values.phone}
@@ -109,7 +92,7 @@ const ProfileForm = ({
         keyboardType="phone-pad"
         className="bg-white mb-3"
       />
-      
+
       <Button
         title="Save Changes"
         onPress={handleSave}

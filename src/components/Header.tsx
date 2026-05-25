@@ -1,19 +1,22 @@
-import { View, TouchableOpacity, Image, Text } from 'react-native';
+import { View, TouchableOpacity, Image, Text, type ViewProps } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { useNavigation } from '@react-navigation/native';
+import type { NavigationProp } from '@react-navigation/native';
 import { Ionicons } from '@expo/vector-icons';
 import { getInitials } from '../utils/helpers';
+import type { RootStackParamList } from '../types';
 
-/**
- * Universal Header component for Little Lemon app
- * 
- * @param {boolean} showBackButton - Show back button
- * @param {function} onBackPress - Custom back button handler
- * @param {string} firstName - User first name (for avatar)
- * @param {string} lastName - User last name (for avatar)
- * @param {string} avatar - Avatar image URI
- * @param {boolean} showAvatar - Show avatar profile button
- */
+interface HeaderOwnProps {
+  showBackButton?: boolean;
+  onBackPress?: () => void;
+  firstName?: string;
+  lastName?: string;
+  avatar?: string | null;
+  showAvatar?: boolean;
+}
+
+type HeaderProps = HeaderOwnProps & Omit<ViewProps, keyof HeaderOwnProps>;
+
 const Header = ({
   showBackButton = false,
   onBackPress,
@@ -22,8 +25,8 @@ const Header = ({
   avatar = null,
   showAvatar = false,
   ...props
-}) => {
-  const navigation = useNavigation();
+}: HeaderProps) => {
+  const navigation = useNavigation<NavigationProp<RootStackParamList>>();
   const insets = useSafeAreaInsets();
 
   const handleBackPress = () => {
@@ -35,7 +38,7 @@ const Header = ({
   };
 
   return (
-    <View className="w-full bg-white" style={{ paddingTop: insets.top }}>
+    <View className="w-full bg-white" style={{ paddingTop: insets.top }} {...props}>
       <View className="flex-row items-center justify-between px-4 py-2 h-20">
         <View className="w-10 items-center">
           {showBackButton && (
@@ -65,10 +68,7 @@ const Header = ({
               activeOpacity={0.7}
             >
               {avatar ? (
-                <Image
-                  source={{ uri: avatar }}
-                  className="w-full h-full"
-                />
+                <Image source={{ uri: avatar }} className="w-full h-full" />
               ) : (
                 <View className="w-full h-full bg-primary items-center justify-center">
                   <Text className="text-white text-sm font-bold">

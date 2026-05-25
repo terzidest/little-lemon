@@ -1,6 +1,17 @@
 import React from 'react';
-import { TextInput, View, Text } from 'react-native';
+import { TextInput, View, Text, type TextInputProps } from 'react-native';
 import { cn } from '../../utils/style';
+
+interface InputOwnProps {
+  label?: string;
+  error?: string;
+  containerClassName?: string;
+  labelClassName?: string;
+  errorClassName?: string;
+  className?: string;
+}
+
+type InputProps = InputOwnProps & TextInputProps;
 
 export const Input = ({
   label,
@@ -10,7 +21,7 @@ export const Input = ({
   errorClassName = '',
   className = '',
   ...props
-}) => {
+}: InputProps) => {
   return (
     <View className={cn('mb-4', containerClassName)}>
       {label && (
@@ -28,9 +39,7 @@ export const Input = ({
         {...props}
       />
       {error && (
-        <Text className={cn('mt-1 text-xs text-red-500', errorClassName)}>
-          {error}
-        </Text>
+        <Text className={cn('mt-1 text-xs text-red-500', errorClassName)}>{error}</Text>
       )}
     </View>
   );

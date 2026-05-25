@@ -2,15 +2,15 @@ import React from 'react';
 import { render } from '@testing-library/react-native';
 import { View, Text, TextInput } from 'react-native';
 
-// Create a simple test component to verify our testing setup works
-const SimpleTestComponent = ({ title, onPress }) => (
+interface SimpleTestComponentProps {
+  title: string;
+  onPress: (text: string) => void;
+}
+
+const SimpleTestComponent = ({ title, onPress }: SimpleTestComponentProps) => (
   <View>
     <Text testID="title">{title}</Text>
-    <TextInput 
-      testID="input"
-      placeholder="Test input"
-      onChangeText={onPress}
-    />
+    <TextInput testID="input" placeholder="Test input" onChangeText={onPress} />
   </View>
 );
 
@@ -19,7 +19,6 @@ describe('Component Testing Setup', () => {
     const { getByTestId, getByText } = render(
       <SimpleTestComponent title="Test Title" onPress={jest.fn()} />
     );
-
     expect(getByText('Test Title')).toBeTruthy();
     expect(getByTestId('title')).toBeTruthy();
     expect(getByTestId('input')).toBeTruthy();
@@ -30,10 +29,8 @@ describe('Component Testing Setup', () => {
     const { getByTestId } = render(
       <SimpleTestComponent title="Test" onPress={mockOnPress} />
     );
-
     const input = getByTestId('input');
     input.props.onChangeText('test text');
-
     expect(mockOnPress).toHaveBeenCalledWith('test text');
   });
 
@@ -41,7 +38,6 @@ describe('Component Testing Setup', () => {
     const { getByTestId } = render(
       <SimpleTestComponent title="Test" onPress={jest.fn()} />
     );
-
     const input = getByTestId('input');
     expect(input.props.placeholder).toBe('Test input');
   });

@@ -1,6 +1,12 @@
 import React from 'react';
-import { View, Text, Switch } from 'react-native';
+import { View, Text, Switch, type SwitchProps } from 'react-native';
 import { cn } from '../../utils/style';
+
+interface CheckboxProps extends SwitchProps {
+  label: string;
+  className?: string;
+  labelClassName?: string;
+}
 
 export const Checkbox = ({
   label,
@@ -9,12 +15,10 @@ export const Checkbox = ({
   className = '',
   labelClassName = '',
   ...props
-}) => {
+}: CheckboxProps) => {
   return (
     <View className={cn('flex-row items-center mb-3', className)}>
-      <Text className={cn('flex-1 text-base', labelClassName)}>
-        {label}
-      </Text>
+      <Text className={cn('flex-1 text-base', labelClassName)}>{label}</Text>
       <Switch
         value={value}
         onValueChange={onValueChange}
