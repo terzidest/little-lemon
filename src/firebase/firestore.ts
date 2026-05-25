@@ -1,45 +1,39 @@
 import {
   collection,
   doc,
-  addDoc,
   setDoc,
   getDoc,
   getDocs,
-  updateDoc,
-  deleteDoc,
   query,
   where,
-  orderBy,
-  limit
 } from 'firebase/firestore';
 import { db } from './config';
+import type { MenuItem, UserProfile, NotificationPreferences } from '../types';
 
-// Collection names
 const COLLECTIONS = {
   MENU_ITEMS: 'menu_items',
   USER_PROFILES: 'user_profiles',
-  NOTIFICATION_PREFS: 'notification_preferences'
-};
+  NOTIFICATION_PREFS: 'notification_preferences',
+} as const;
 
-// Menu items operations
-export const fetchMenuItems = async () => {
+export const fetchMenuItems = async (): Promise<MenuItem[]> => {
   try {
     const menuCollectionRef = collection(db, COLLECTIONS.MENU_ITEMS);
     const querySnapshot = await getDocs(menuCollectionRef);
-    
-    const menuItems = [];
-    querySnapshot.forEach((doc) => {
-      const data = doc.data();
+
+    const menuItems: MenuItem[] = [];
+    querySnapshot.forEach((docSnap) => {
+      const data = docSnap.data();
       menuItems.push({
-        id: data.id || parseInt(doc.id, 10),
+        id: data.id || parseInt(docSnap.id, 10),
         name: data.name || '',
         price: data.price || 0,
         description: data.description || '',
         image: data.image || '',
-        category: data.category || 'uncategorized'
+        category: data.category || 'uncategorized',
       });
     });
-    
+
     return menuItems;
   } catch (error) {
     console.error('Error fetching menu items:', error);
@@ -47,44 +41,42 @@ export const fetchMenuItems = async () => {
   }
 };
 
-export const filterMenuItems = async (categories, searchTerm) => {
+export const filterMenuItems = async (
+  categories: string[],
+  searchTerm: string
+): Promise<MenuItem[]> => {
   try {
     const menuCollectionRef = collection(db, COLLECTIONS.MENU_ITEMS);
-    // Create query based on categories
-    let menuQuery = menuCollectionRef;
-    
-    // If there are categories to filter by, create a query
-    if (categories.length > 0) {
-      menuQuery = query(
-        menuCollectionRef,
-        where('category', 'in', categories)
-      );
-    }
-    
+
+    const menuQuery =
+      categories.length > 0
+        ? query(menuCollectionRef, where('category', 'in', categories))
+        : menuCollectionRef;
+
     const querySnapshot = await getDocs(menuQuery);
-    
-    let menuItems = [];
-    querySnapshot.forEach((doc) => {
-      const data = doc.data();
+
+    let menuItems: MenuItem[] = [];
+    querySnapshot.forEach((docSnap) => {
+      const data = docSnap.data();
       menuItems.push({
-        id: data.id || parseInt(doc.id, 10),
+        id: data.id || parseInt(docSnap.id, 10),
         name: data.name || '',
         price: data.price || 0,
         description: data.description || '',
         image: data.image || '',
-        category: data.category || 'uncategorized'
+        category: data.category || 'uncategorized',
       });
     });
-    
-    // If there's a search term, filter the results client-side
+
     if (searchTerm) {
-      const lowerCaseSearchTerm = searchTerm.toLowerCase();
-      menuItems = menuItems.filter(item => 
-        item.name.toLowerCase().includes(lowerCaseSearchTerm) ||
-        item.description.toLowerCase().includes(lowerCaseSearchTerm)
+      const lower = searchTerm.toLowerCase();
+      menuItems = menuItems.filter(
+        item =>
+          item.name.toLowerCase().includes(lower) ||
+          item.description.toLowerCase().includes(lower)
       );
     }
-    
+
     return menuItems;
   } catch (error) {
     console.error('Error filtering menu items:', error);
@@ -92,23 +84,16 @@ export const filterMenuItems = async (categories, searchTerm) => {
   }
 };
 
-export const saveMenuItems = async (menuItems) => {
+export const saveMenuItems = async (menuItems: MenuItem[]): Promise<void> => {
   try {
-    // Use a batch write in a real implementation to handle multiple writes atomically
-    
     for (const item of menuItems) {
-      // Generate a document ID if item.id is undefined or null
-      const docId = item.id ? item.id.toString() : Math.floor(Math.random() * 1000000).toString();
-      
-      // Make sure all menu items have an ID property before saving
-      const itemToSave = {
+      const docId = item.id ? item.id.toString() : Math.floor(Math.random() * 1_000_000).toString();
+      const itemToSave: MenuItem = {
         ...item,
-        id: item.id || parseInt(docId, 10)
+        id: item.id || parseInt(docId, 10),
       };
-      
       await setDoc(doc(db, COLLECTIONS.MENU_ITEMS, docId), itemToSave);
     }
-    
     console.log('Menu items saved to Firestore');
   } catch (error) {
     console.error('Error saving menu items to Firestore:', error);
@@ -116,12 +101,11 @@ export const saveMenuItems = async (menuItems) => {
   }
 };
 
-// User profile operations
-export const getUserProfile = async (userId) => {
+export const getUserProfile = async (userId: string): Promise<UserProfile | null> => {
   try {
     const userProfileRef = doc(db, COLLECTIONS.USER_PROFILES, userId);
     const userProfileSnap = await getDoc(userProfileRef);
-    
+
     if (userProfileSnap.exists()) {
       const data = userProfileSnap.data();
       return {
@@ -129,10 +113,10 @@ export const getUserProfile = async (userId) => {
         lastName: data.lastName || '',
         email: data.email || '',
         phone: data.phone || '',
-        avatar: data.avatar || null
+        avatar: data.avatar || null,
       };
     }
-    
+
     return null;
   } catch (error) {
     console.error('Error getting user profile:', error);
@@ -140,7 +124,7 @@ export const getUserProfile = async (userId) => {
   }
 };
 
-export const saveUserProfile = async (userId, profile) => {
+export const saveUserProfile = async (userId: string, profile: UserProfile): Promise<void> => {
   try {
     const userProfileRef = doc(db, COLLECTIONS.USER_PROFILES, userId);
     await setDoc(userProfileRef, profile, { merge: true });
@@ -151,22 +135,23 @@ export const saveUserProfile = async (userId, profile) => {
   }
 };
 
-// Notification preferences operations
-export const getNotificationPreferences = async (userId) => {
+export const getNotificationPreferences = async (
+  userId: string
+): Promise<NotificationPreferences | null> => {
   try {
-    const notificationPrefsRef = doc(db, COLLECTIONS.NOTIFICATION_PREFS, userId);
-    const notificationPrefsSnap = await getDoc(notificationPrefsRef);
-    
-    if (notificationPrefsSnap.exists()) {
-      const data = notificationPrefsSnap.data();
+    const prefsRef = doc(db, COLLECTIONS.NOTIFICATION_PREFS, userId);
+    const prefsSnap = await getDoc(prefsRef);
+
+    if (prefsSnap.exists()) {
+      const data = prefsSnap.data();
       return {
         orderStatuses: data.orderStatuses || false,
         passwordChanges: data.passwordChanges || false,
         specialOffers: data.specialOffers || false,
-        newsletter: data.newsletter || false
+        newsletter: data.newsletter || false,
       };
     }
-    
+
     return null;
   } catch (error) {
     console.error('Error getting notification preferences:', error);
@@ -174,10 +159,13 @@ export const getNotificationPreferences = async (userId) => {
   }
 };
 
-export const saveNotificationPreferences = async (userId, preferences) => {
+export const saveNotificationPreferences = async (
+  userId: string,
+  preferences: NotificationPreferences
+): Promise<void> => {
   try {
-    const notificationPrefsRef = doc(db, COLLECTIONS.NOTIFICATION_PREFS, userId);
-    await setDoc(notificationPrefsRef, preferences, { merge: true });
+    const prefsRef = doc(db, COLLECTIONS.NOTIFICATION_PREFS, userId);
+    await setDoc(prefsRef, preferences, { merge: true });
     console.log('Notification preferences saved to Firestore');
   } catch (error) {
     console.error('Error saving notification preferences to Firestore:', error);
@@ -185,41 +173,31 @@ export const saveNotificationPreferences = async (userId, preferences) => {
   }
 };
 
-// Helper function to migrate initial menu data from API to Firestore
-export const migrateMenuDataFromAPIToFirestore = async (apiUrl) => {
+export const migrateMenuDataFromAPIToFirestore = async (apiUrl: string): Promise<void> => {
   try {
     console.log('Starting menu data migration from API...');
-    
-    // Fetch data from the API
     const response = await fetch(apiUrl);
     if (!response.ok) {
       throw new Error(`API fetch failed with status: ${response.status}`);
     }
-    
-    const data = await response.json();
+
+    const data = await response.json() as { menu?: Array<Record<string, unknown>> };
     console.log('API data fetched successfully');
-    
+
     if (data && data.menu && Array.isArray(data.menu)) {
       console.log(`Found ${data.menu.length} menu items to import`);
-      
-      // Add validation for each menu item
-      const validMenuItems = data.menu.map((item, index) => {
-        // Ensure each item has the required properties
-        return {
-          id: item.id || index + 1,
-          name: item.name || `Item ${index + 1}`,
-          price: parseFloat(item.price) || 0,
-          description: item.description || '',
-          image: item.image || '',
-          category: item.category || 'uncategorized'
-        };
-      });
-      
-      // Save the menu items to Firestore
+      const validMenuItems: MenuItem[] = data.menu.map((item, index) => ({
+        id: (item.id as number | string) || index + 1,
+        name: (item.name as string) || `Item ${index + 1}`,
+        price: parseFloat((item.price as string) ?? '0') || 0,
+        description: (item.description as string) || '',
+        image: (item.image as string) || '',
+        category: (item.category as string) || 'uncategorized',
+      }));
+
       await saveMenuItems(validMenuItems);
       console.log('Menu data successfully migrated from API to Firestore');
     } else {
-      console.error('Invalid API response format:', data);
       throw new Error('Invalid API response format');
     }
   } catch (error) {
