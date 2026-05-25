@@ -1,9 +1,6 @@
 import React from 'react';
-import { View, Text, ActivityIndicator, StyleSheet } from 'react-native';
+import { View, Text, ActivityIndicator } from 'react-native';
 
-/**
- * Simple splash screen shown during app initialization
- */
 const SplashScreen = () => {
   return (
     <View className="flex-1 justify-center items-center bg-white">
