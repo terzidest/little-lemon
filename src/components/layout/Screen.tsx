@@ -45,7 +45,7 @@ const Screen = ({
   keyboardAvoidingView = true,
   ...props
 }: ScreenProps) => {
-  const Content = () => (
+  const content = (
     <View className={`flex-1 ${padding ? 'px-5 py-2' : ''}`}>
       {title && <Text className="text-2xl font-bold text-primary mb-2">{title}</Text>}
       {subtitle && <Text className="text-base text-gray-600 mb-6">{subtitle}</Text>}
@@ -62,10 +62,10 @@ const Screen = ({
           keyboardShouldPersistTaps="handled"
           contentContainerStyle={{ flexGrow: 1 }}
         >
-          <Content />
+          {content}
         </ScrollView>
       ) : (
-        <Content />
+        content
       )}
     </>
   );
