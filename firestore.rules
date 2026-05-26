@@ -33,10 +33,12 @@ service cloud.firestore {
     }
     
     // Rate limiting helper (prevent spam in demo)
-    // Checks if the last update was at least 5 seconds ago
+    // Checks if the last update was at least 5 seconds ago.
+    // Uses `in` to guard against missing field (accessing an undefined map
+    // property in Firestore rules throws, it doesn't return null).
     function rateLimitCheck() {
       return !exists(/databases/$(database)/documents/user_profiles/$(request.auth.uid)) ||
-             resource.data.lastUpdated == null ||
+             !('lastUpdated' in resource.data) ||
              request.time > resource.data.lastUpdated + duration.value(5, 's');
     }
     
