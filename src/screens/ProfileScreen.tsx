@@ -1,5 +1,5 @@
-import React, { useEffect, useState } from 'react';
-import { Alert, View } from 'react-native';
+import React, { useEffect } from 'react';
+import { Alert } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import type { NavigationProp } from '@react-navigation/native';
 import Screen from '../components/layout/Screen';
@@ -18,6 +18,7 @@ const ProfileScreen = () => {
     loading,
     loadProfile,
     saveProfile,
+    savePreferences,
     updateProfile,
     updatePreferences,
     pickImage,
@@ -25,37 +26,33 @@ const ProfileScreen = () => {
   } = useProfile();
 
   const { logout } = useAuth();
-  const [hasChanges, setHasChanges] = useState(false);
 
   useEffect(() => {
     loadProfile();
   }, []);
 
-  useEffect(() => {
-    setHasChanges(true);
-  }, [profile, preferences]);
-
   const handleSaveProfile = async (formData: Partial<UserProfile>) => {
     try {
       updateProfile(formData);
       await saveProfile();
-      setHasChanges(false);
       Alert.alert('Success', 'Your changes have been saved');
-    } catch {
-      Alert.alert('Error', 'Failed to save profile changes');
+    } catch (err) {
+      const message = err instanceof Error ? err.message : 'Failed to save profile changes';
+      Alert.alert('Error', message);
     }
   };
 
-  const handleNotificationChange = (newPreferences: NotificationPreferences) => {
+  const handleNotificationChange = async (newPreferences: NotificationPreferences) => {
     updatePreferences(newPreferences);
+    try {
+      await savePreferences();
+    } catch (err) {
+      const message = err instanceof Error ? err.message : 'Failed to save notification preferences';
+      Alert.alert('Error', message);
+    }
   };
 
-  const handleDiscardChanges = async () => {
-    await loadProfile();
-    setHasChanges(false);
-  };
-
-  const handleLogout = async () => {
+  const handleLogout = () => {
     Alert.alert('Confirm Logout', 'Are you sure you want to log out?', [
       { text: 'Cancel', style: 'cancel' },
       {
@@ -95,26 +92,9 @@ const ProfileScreen = () => {
         title="Logout"
         onPress={handleLogout}
         variant="secondary"
-        className="mt-6 mb-4"
+        className="mt-6 mb-8"
         fullWidth
       />
-      {hasChanges && (
-        <View className="flex-row justify-between mb-8">
-          <Button
-            title="Discard Changes"
-            onPress={handleDiscardChanges}
-            variant="outline"
-            className="flex-1 mr-2"
-          />
-          <Button
-            title="Save Changes"
-            onPress={() => saveProfile()}
-            variant="primary"
-            className="flex-1 ml-2"
-            loading={loading}
-          />
-        </View>
-      )}
     </Screen>
   );
 };
