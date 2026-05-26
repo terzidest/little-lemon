@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { Alert } from 'react-native';
 import * as ImagePicker from 'expo-image-picker';
+import { shallow } from 'zustand/shallow';
 import { useStore } from '../store/useStore';
 import type { UserProfile, NotificationPreferences } from '../types';
 
@@ -18,20 +19,23 @@ const useProfile = () => {
     updateNotificationPreferences,
     saveNotificationPreferences,
     loadNotificationPreferences,
-  } = useStore((state) => ({
-    userProfile: state.userProfile,
-    profileLoading: state.profileLoading,
-    profileError: state.profileError,
-    notificationPreferences: state.notificationPreferences,
-    notificationsLoading: state.notificationsLoading,
-    notificationsError: state.notificationsError,
-    updateUserProfile: state.updateUserProfile,
-    saveUserProfile: state.saveUserProfile,
-    loadUserProfile: state.loadUserProfile,
-    updateNotificationPreferences: state.updateNotificationPreferences,
-    saveNotificationPreferences: state.saveNotificationPreferences,
-    loadNotificationPreferences: state.loadNotificationPreferences,
-  }));
+  } = useStore(
+    (state) => ({
+      userProfile: state.userProfile,
+      profileLoading: state.profileLoading,
+      profileError: state.profileError,
+      notificationPreferences: state.notificationPreferences,
+      notificationsLoading: state.notificationsLoading,
+      notificationsError: state.notificationsError,
+      updateUserProfile: state.updateUserProfile,
+      saveUserProfile: state.saveUserProfile,
+      loadUserProfile: state.loadUserProfile,
+      updateNotificationPreferences: state.updateNotificationPreferences,
+      saveNotificationPreferences: state.saveNotificationPreferences,
+      loadNotificationPreferences: state.loadNotificationPreferences,
+    }),
+    shallow
+  );
 
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -54,11 +58,32 @@ const useProfile = () => {
     setLoading(true);
     setError(null);
     try {
-      await Promise.all([saveUserProfile(), saveNotificationPreferences()]);
+      const ok = await saveUserProfile();
+      if (!ok) {
+        throw new Error(useStore.getState().profileError ?? 'Failed to save profile');
+      }
     } catch (err) {
       const message = err instanceof Error ? err.message : 'Failed to save profile';
       setError(message);
-      console.error('Error saving profile:', err);
+      throw err;
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const savePreferences = async (): Promise<void> => {
+    setLoading(true);
+    setError(null);
+    try {
+      const ok = await saveNotificationPreferences();
+      if (!ok) {
+        throw new Error(
+          useStore.getState().notificationsError ?? 'Failed to save preferences'
+        );
+      }
+    } catch (err) {
+      const message = err instanceof Error ? err.message : 'Failed to save preferences';
+      setError(message);
       throw err;
     } finally {
       setLoading(false);
@@ -109,6 +134,7 @@ const useProfile = () => {
     error: error || profileError || notificationsError,
     loadProfile,
     saveProfile,
+    savePreferences,
     updateProfile,
     updatePreferences,
     pickImage,

@@ -39,7 +39,6 @@ export const useStore = create<StoreState>()((...a) => {
       },
       notificationsLoading: false,
       notificationsError: null,
-      menuItems: [],
       allMenuItems: [],
       selectedCategories: [],
       searchTerm: '',

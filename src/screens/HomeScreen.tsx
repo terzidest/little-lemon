@@ -1,6 +1,5 @@
-import React, { useCallback } from 'react';
+import React, { useCallback, useEffect } from 'react';
 import { View, FlatList, Text, ActivityIndicator } from 'react-native';
-import { useFocusEffect } from '@react-navigation/native';
 import Screen from '../components/layout/Screen';
 import { HeroSection } from '../components/HeroSection';
 import { CategoryFilter } from '../components/CategoryFilter';
@@ -10,59 +9,36 @@ import { useStore } from '../store/useStore';
 import type { MenuItem } from '../types';
 
 const HomeScreen = () => {
-  const { userProfile, loadUserProfile } = useStore();
-  const { menuItems, loading, selectedCategories, searchTerm, loadMenu, toggleCategory, setSearchTerm } =
-    useMenu();
+  const userProfile = useStore((state) => state.userProfile);
+  const {
+    menuItems,
+    loading,
+    selectedCategories,
+    searchTerm,
+    loadMenu,
+    toggleCategory,
+    setSearchTerm,
+  } = useMenu();
 
-  useFocusEffect(
-    useCallback(() => {
-      const loadData = async () => {
-        try {
-          await Promise.all([loadUserProfile(), loadMenu()]);
-        } catch {
-          // errors are surfaced via hook state
-        }
-      };
-      loadData();
-    }, [])
-  );
-
-  const keyExtractor = useCallback((item: MenuItem) => {
-    return `menu-item-${item.id || Math.random().toString(36).substring(2, 9)}`;
+  useEffect(() => {
+    loadMenu();
   }, []);
 
-  const ListHeader = useCallback(
-    () => (
-      <View className="px-2 pt-2 pb-4">
-        <HeroSection searchTerm={searchTerm} onSearchChange={setSearchTerm} />
-        <CategoryFilter selectedCategories={selectedCategories} onToggleCategory={toggleCategory} />
-        <View className="flex-row justify-between items-center mb-2 mt-4">
-          <Text className="text-xl font-bold text-primary">Menu</Text>
-        </View>
-        <View className="h-0.5 bg-primary mb-4" />
-      </View>
-    ),
-    [searchTerm, selectedCategories, toggleCategory]
-  );
-
-  const EmptyComponent = useCallback(
-    () => (
-      <View className="flex-1 justify-center items-center py-10">
-        {loading ? (
-          <ActivityIndicator size="large" color="#495E57" />
-        ) : (
-          <Text className="text-darkGray text-base">No menu items found.</Text>
-        )}
-      </View>
-    ),
-    [loading]
-  );
-
-  const ItemSeparator = useCallback(() => <View className="h-px bg-gray-200 my-2" />, []);
+  const keyExtractor = useCallback((item: MenuItem) => `menu-item-${item.id}`, []);
 
   const renderItem = useCallback(
     ({ item }: { item: MenuItem }) => <MenuItemCard item={item} />,
     []
+  );
+
+  const listEmpty = (
+    <View className="flex-1 justify-center items-center py-10">
+      {loading ? (
+        <ActivityIndicator size="large" color="#495E57" />
+      ) : (
+        <Text className="text-darkGray text-base">No menu items found.</Text>
+      )}
+    </View>
   );
 
   return (
@@ -78,18 +54,22 @@ const HomeScreen = () => {
       padding={false}
       scroll={false}
     >
+      <View className="px-2 pt-2">
+        <HeroSection searchTerm={searchTerm} onSearchChange={setSearchTerm} />
+        <CategoryFilter selectedCategories={selectedCategories} onToggleCategory={toggleCategory} />
+        <View className="flex-row justify-between items-center mb-2 mt-4">
+          <Text className="text-xl font-bold text-primary">Menu</Text>
+        </View>
+        <View className="h-0.5 bg-primary mb-4" />
+      </View>
       <FlatList
         data={menuItems}
         renderItem={renderItem}
         keyExtractor={keyExtractor}
-        ListHeaderComponent={ListHeader}
-        ListEmptyComponent={EmptyComponent}
-        ItemSeparatorComponent={ItemSeparator}
-        contentContainerStyle={{
-          flexGrow: 1,
-          paddingHorizontal: 8,
-          paddingBottom: 20,
-        }}
+        ListEmptyComponent={listEmpty}
+        ItemSeparatorComponent={() => <View className="h-px bg-gray-200 my-2" />}
+        contentContainerStyle={{ flexGrow: 1, paddingHorizontal: 8, paddingBottom: 20 }}
+        keyboardShouldPersistTaps="handled"
       />
     </Screen>
   );
