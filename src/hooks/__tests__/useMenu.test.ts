@@ -9,26 +9,27 @@ jest.mock('../../store/useStore', () => ({
 const mockUseStore = useStore as jest.MockedFunction<typeof useStore>;
 
 describe('useMenu Hook', () => {
+  const mockItems = [
+    {
+      id: 1,
+      name: 'Greek Salad',
+      price: 12.99,
+      description: 'Fresh vegetables with feta cheese',
+      category: 'starters',
+      image: 'greek-salad.jpg',
+    },
+    {
+      id: 2,
+      name: 'Bruschetta',
+      price: 5.99,
+      description: 'Grilled bread with tomatoes',
+      category: 'starters',
+      image: 'bruschetta.jpg',
+    },
+  ];
+
   const mockStore = {
-    menuItems: [
-      {
-        id: 1,
-        name: 'Greek Salad',
-        price: 12.99,
-        description: 'Fresh vegetables with feta cheese',
-        category: 'starters',
-        image: 'greek-salad.jpg',
-      },
-      {
-        id: 2,
-        name: 'Bruschetta',
-        price: 5.99,
-        description: 'Grilled bread with tomatoes',
-        category: 'starters',
-        image: 'bruschetta.jpg',
-      },
-    ],
-    allMenuItems: [],
+    allMenuItems: mockItems,
     menuLoading: false,
     menuError: null,
     selectedCategories: [],
@@ -47,7 +48,7 @@ describe('useMenu Hook', () => {
 
   it('should return menu data from store', () => {
     const { result } = renderHook(() => useMenu());
-    expect(result.current.menuItems).toEqual(mockStore.menuItems);
+    expect(result.current.menuItems).toEqual(mockItems);
     expect(result.current.loading).toBe(false);
     expect(result.current.selectedCategories).toEqual([]);
     expect(result.current.searchTerm).toBe('');

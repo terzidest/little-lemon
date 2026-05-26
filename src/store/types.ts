@@ -18,7 +18,6 @@ export interface AuthActions {
 }
 
 export interface MenuState {
-  menuItems: MenuItem[];
   allMenuItems: MenuItem[];
   selectedCategories: string[];
   searchTerm: string;
@@ -31,7 +30,6 @@ export interface MenuActions {
   setMenuError: (error: string | null) => void;
   resetMenuError: () => void;
   fetchMenu: () => Promise<boolean>;
-  setMenuItems: (items: MenuItem[]) => void;
   toggleCategory: (category: string) => void;
   setSearchTerm: (term: string) => void;
   resetFilters: () => void;
